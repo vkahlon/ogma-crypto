@@ -7,7 +7,7 @@ function getBtcInfo() {
   newReq.responseType = 'json';
   newReq.addEventListener('load', function () {
     var btcPrice = newReq.response.ticker.price;
-    btcPrice = Math.round(btcPrice);
+    btcPrice = Math.round(btcPrice * 100) / 100;
     $changeBtcPrice.textContent = btcPrice;
 
     var btcVol = newReq.response.ticker.volume;
@@ -15,7 +15,7 @@ function getBtcInfo() {
     $changeBtcVolume.textContent = btcVol;
 
     var btcChange = newReq.response.ticker.change;
-    btcChange = Math.round(btcChange);
+    btcChange = Math.round(btcChange * 100) / 100;
     $changeBtc.textContent = btcChange;
   });
   newReq.send();
@@ -29,7 +29,7 @@ function getEthInfo() {
   newReq2.responseType = 'json';
   newReq2.addEventListener('load', function () {
     var ethPrice = newReq2.response.ticker.price;
-    ethPrice = Math.round(ethPrice);
+    ethPrice = Math.round(ethPrice * 100) / 100;
     $changeEthPrice.textContent = ethPrice;
 
     var ethVol = newReq2.response.ticker.volume;
@@ -37,7 +37,7 @@ function getEthInfo() {
     $changeEthVolume.textContent = ethVol;
 
     var ethChange = newReq2.response.ticker.change;
-    ethChange = Math.round(ethChange);
+    ethChange = Math.round(ethChange * 100) / 100;
     $changeEth.textContent = ethChange;
   });
   newReq2.send();
@@ -51,16 +51,17 @@ function getLinkInfo() {
   newReq3.responseType = 'json';
   newReq3.addEventListener('load', function () {
     var linkPrice = newReq3.response.ticker.price;
-    linkPrice = Math.round(linkPrice);
+    linkPrice = Math.round(linkPrice * 100) / 100;
     $changeLinkPrice.textContent = linkPrice;
 
     var linkVol = newReq3.response.ticker.volume;
     linkVol = Math.round(linkVol);
     $changeLinkVolume.textContent = linkVol;
 
-    var ethLink = newReq3.response.ticker.change;
-    ethLink = Math.round(ethLink);
-    $changeLink.textContent = ethLink;
+    var linkChange = newReq3.response.ticker.change;
+    linkChange = Math.round(linkChange * 100) / 100;
+    $changeLink.textContent = linkChange;
+
   });
   newReq3.send();
 }

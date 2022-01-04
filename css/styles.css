@@ -1,0 +1,19 @@
+.description {
+  font-weight: 525;
+}
+
+.volume {
+  font-size: medium;
+}
+
+.table {
+  margin-top: 2vh;
+  box-shadow: 0 2px 1px 1px lightgray;
+}
+
+.table-header {
+  font-weight: bolder;
+  text-align: center;
+  font-size: 21px;
+  font-family: Roboto, sans-serif;
+}
