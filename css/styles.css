@@ -17,3 +17,7 @@
   font-size: 21px;
   font-family: Roboto, sans-serif;
 }
+
+.table-holder {
+  justify-content: center;
+}

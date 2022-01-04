@@ -19,7 +19,7 @@ function getBtcInfo() {
     btcObject.change = btcChange;
     btcObject.target = btcTarget;
     btcObject.color = btcColor;
-    displayBigThreeTable(btcObject, btcColor);
+    displayBigThreeTable(btcObject);
   });
   newReq.send();
 }
@@ -149,7 +149,7 @@ function createTableTree(object) {
 }
 
 function displayBigThreeTable(object) {
-  var $theGrandDiv = document.querySelector('.main-table');
+  var $theGrandDiv = document.querySelector('.table-holder');
   var newTable = createTableTree(object);
   $theGrandDiv.appendChild(newTable);
 }
