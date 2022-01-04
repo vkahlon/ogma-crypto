@@ -18,6 +18,7 @@ function getBtcInfo() {
     btcObject.volume = btcVol;
     btcObject.change = btcChange;
     btcObject.target = btcTarget;
+    btcObject.color = btcColor;
     displayBigThreeTable(btcObject, btcColor);
   });
   newReq.send();
@@ -42,7 +43,8 @@ function getEthInfo() {
     ethObject.volume = ethVol;
     ethObject.change = ethChange;
     ethObject.target = ethTarget;
-    displayBigThreeTable(ethObject, ethColor);
+    ethObject.color = ethColor;
+    displayBigThreeTable(ethObject);
   });
   newReq2.send();
 }
@@ -66,12 +68,13 @@ function getLinkInfo() {
     linkObject.volume = linkVol;
     linkObject.change = linkChange;
     linkObject.target = linkTarget;
-    displayBigThreeTable(linkObject, linkColor);
+    linkObject.color = linkColor;
+    displayBigThreeTable(linkObject);
   });
   newReq3.send();
 }
 
-function createTableTree(object, color) {
+function createTableTree(object) {
   var createDivElementCol = document.createElement('div');
   createDivElementCol.setAttribute('class', 'col-8 col-lg-4');
 
@@ -86,7 +89,7 @@ function createTableTree(object, color) {
   var createTh = document.createElement('th');
   createTh.setAttribute('class', 'table-header');
   createTh.setAttribute('colspan', '2');
-  createTh.setAttribute('style', 'color: ' + color);
+  createTh.setAttribute('style', 'color: ' + object.color);
   createTh.textContent = object.base;
   createTableRow.appendChild(createTh);
 
@@ -145,9 +148,9 @@ function createTableTree(object, color) {
   return createDivElementCol;
 }
 
-function displayBigThreeTable(object, color) {
+function displayBigThreeTable(object) {
   var $theGrandDiv = document.querySelector('.main-table');
-  var newTable = createTableTree(object, color);
+  var newTable = createTableTree(object);
   $theGrandDiv.appendChild(newTable);
 }
 getBtcInfo();
