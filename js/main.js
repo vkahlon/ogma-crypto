@@ -203,6 +203,9 @@ function switchViews(view) {
     }
   }
 }
+function restoreAlert(event) {
+  $grabAlert.classList.add('hidden');
+}
 
 var $views = document.querySelectorAll('.view-container');
 var $createTableButton = document.querySelector('.table-creator');
@@ -229,3 +232,6 @@ var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
 
 var $grabAlert = document.querySelector('.alert-package');
+
+var $closeAlert = document.querySelector('.close-alert');
+$closeAlert.addEventListener('click', restoreAlert);
