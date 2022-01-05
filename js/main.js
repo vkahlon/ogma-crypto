@@ -157,11 +157,18 @@ function createTableTree(object) {
   var createTableRow = document.createElement('tr');
   createTableHead.appendChild(createTableRow);
   var createTh = document.createElement('th');
-  createTh.setAttribute('class', 'table-header');
   createTh.setAttribute('colspan', '2');
   createTh.setAttribute('style', 'color: ' + object.color);
-  createTh.textContent = object.base;
   createTableRow.appendChild(createTh);
+
+  var createSpanAlpha = document.createElement('span');
+  createSpanAlpha.className = 'table-header d-flex justify-content-between table-header';
+  createSpanAlpha.textContent = object.base;
+  createTh.appendChild(createSpanAlpha);
+
+  var createIconButton = document.createElement('button');
+  createIconButton.className = 'btn btn-outline-primary rounded fas fa-pencil-alt';
+  createSpanAlpha.appendChild(createIconButton);
 
   var createTableBody = document.createElement('tbody');
   createTableElement.appendChild(createTableBody);

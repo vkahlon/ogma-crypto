@@ -17,7 +17,6 @@
 
 .table-header {
   font-weight: bolder;
-  text-align: center;
   font-size: 21px;
   font-family: Roboto, sans-serif;
 }
@@ -72,4 +71,10 @@
 
 .alert-dismissible .close {
   z-index: 0;
+}
+
+.fas {
+  font-size: 16px;
+  padding: 6px;
+  color: #2e64b0;
 }
