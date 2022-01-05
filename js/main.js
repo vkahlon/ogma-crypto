@@ -138,6 +138,12 @@ function displayAlert() {
   $grabAlertPackage.appendChild(newAlert);
 }
 
+window.addEventListener('load', restoreTables);
+function restoreTables(event) {
+  for (var index = 0; index < data.tables.length; index++) {
+    getDataForUser(data.tables[index]);
+  }
+}
 function createTableTree(object) {
   var createDivElementCol = document.createElement('div');
   createDivElementCol.setAttribute('class', 'col-8 col-lg-4');
