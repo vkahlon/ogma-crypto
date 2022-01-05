@@ -69,3 +69,7 @@
   width: 100%;
   background-color: rgba(0, 0, 0, 0.8);
 }
+
+.alert-dismissible .close {
+  z-index: 0;
+}
