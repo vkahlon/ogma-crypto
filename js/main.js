@@ -19,7 +19,7 @@ function getBtcInfo() {
     btcObject.change = btcChange;
     btcObject.target = btcTarget;
     btcObject.color = btcColor;
-    displayTable(btcObject);
+    displayTable(btcObject, true);
   });
   newReq.send();
 }
@@ -44,7 +44,7 @@ function getEthInfo() {
     ethObject.change = ethChange;
     ethObject.target = ethTarget;
     ethObject.color = ethColor;
-    displayTable(ethObject);
+    displayTable(ethObject, true);
   });
   newReq2.send();
 }
@@ -69,7 +69,7 @@ function getLinkInfo() {
     linkObject.change = linkChange;
     linkObject.target = linkTarget;
     linkObject.color = linkColor;
-    displayTable(linkObject);
+    displayTable(linkObject, true);
   });
   newReq3.send();
 }
@@ -98,7 +98,7 @@ function getDataForUser(object) {
       userObject.change = userChange;
       userObject.target = userTarget;
       userObject.color = userColor;
-      displayTable(userObject);
+      displayTable(userObject, false);
     }
   });
   newReq4.send();
@@ -144,7 +144,7 @@ function restoreTables(event) {
     getDataForUser(data.tables[index]);
   }
 }
-function createTableTree(object) {
+function createTableTree(object, isBigThree) {
   var createDivElementCol = document.createElement('div');
   createDivElementCol.setAttribute('class', 'col-8 col-lg-4');
 
@@ -152,24 +152,36 @@ function createTableTree(object) {
   createTableElement.setAttribute('class', 'table table-striped table-hover');
   createDivElementCol.appendChild(createTableElement);
 
-  var createTableHead = document.createElement('thead');
-  createTableElement.appendChild(createTableHead);
-  var createTableRow = document.createElement('tr');
-  createTableHead.appendChild(createTableRow);
-  var createTh = document.createElement('th');
-  createTh.setAttribute('colspan', '2');
-  createTh.setAttribute('style', 'color: ' + object.color);
-  createTableRow.appendChild(createTh);
+  if (isBigThree === true) {
+    var createTableHead = document.createElement('thead');
+    createTableElement.appendChild(createTableHead);
+    var createTableRow = document.createElement('tr');
+    createTableHead.appendChild(createTableRow);
+    var createTh = document.createElement('th');
+    createTh.setAttribute('class', 'table-header big-three-header');
+    createTh.setAttribute('colspan', '2');
+    createTh.setAttribute('style', 'color: ' + object.color);
+    createTh.textContent = object.base;
+    createTableRow.appendChild(createTh);
+  } else {
+    createTableHead = document.createElement('thead');
+    createTableElement.appendChild(createTableHead);
+    createTableRow = document.createElement('tr');
+    createTableHead.appendChild(createTableRow);
+    createTh = document.createElement('th');
+    createTh.setAttribute('colspan', '2');
+    createTh.setAttribute('style', 'color: ' + object.color);
+    createTableRow.appendChild(createTh);
 
-  var createSpanAlpha = document.createElement('span');
-  createSpanAlpha.className = 'table-header d-flex justify-content-between table-header';
-  createSpanAlpha.textContent = object.base;
-  createTh.appendChild(createSpanAlpha);
+    var createSpanAlpha = document.createElement('span');
+    createSpanAlpha.className = 'table-header d-flex justify-content-between table-header';
+    createSpanAlpha.textContent = object.base;
+    createTh.appendChild(createSpanAlpha);
 
-  var createIconButton = document.createElement('button');
-  createIconButton.className = 'btn btn-outline-primary rounded fas fa-pencil-alt';
-  createSpanAlpha.appendChild(createIconButton);
-
+    var createIconButton = document.createElement('button');
+    createIconButton.className = 'btn btn-outline-primary rounded fas fa-pencil-alt';
+    createSpanAlpha.appendChild(createIconButton);
+  }
   var createTableBody = document.createElement('tbody');
   createTableElement.appendChild(createTableBody);
 
@@ -225,9 +237,9 @@ function createTableTree(object) {
   return createDivElementCol;
 }
 
-function displayTable(object) {
+function displayTable(object, isBigThree) {
   var $theGrandDiv = document.querySelector('.table-holder');
-  var newTable = createTableTree(object);
+  var newTable = createTableTree(object, isBigThree);
   $theGrandDiv.prepend(newTable);
 }
 getBtcInfo();

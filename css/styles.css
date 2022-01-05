@@ -21,6 +21,10 @@
   font-family: Roboto, sans-serif;
 }
 
+.big-three-header {
+  text-align: center;
+}
+
 .table-holder {
   justify-content: center;
 }
