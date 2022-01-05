@@ -19,7 +19,7 @@ function getBtcInfo() {
     btcObject.change = btcChange;
     btcObject.target = btcTarget;
     btcObject.color = btcColor;
-    displayBigThreeTable(btcObject);
+    displayTable(btcObject);
   });
   newReq.send();
 }
@@ -44,7 +44,7 @@ function getEthInfo() {
     ethObject.change = ethChange;
     ethObject.target = ethTarget;
     ethObject.color = ethColor;
-    displayBigThreeTable(ethObject);
+    displayTable(ethObject);
   });
   newReq2.send();
 }
@@ -69,9 +69,39 @@ function getLinkInfo() {
     linkObject.change = linkChange;
     linkObject.target = linkTarget;
     linkObject.color = linkColor;
-    displayBigThreeTable(linkObject);
+    displayTable(linkObject);
   });
   newReq3.send();
+}
+
+function getDataForUser(object) {
+  var newReq4 = new XMLHttpRequest();
+  newReq4.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq4.responseType = 'json';
+  newReq4.addEventListener('load', function () {
+    if (newReq4.response.success === false) {
+      $grabAlert.classList.remove('hidden');
+    } else {
+      var userColor = '#2E64B0';
+      var userObject = {};
+      var userTarget = newReq4.response.ticker.target;
+      var userBase = newReq4.response.ticker.base;
+      var userPrice = newReq4.response.ticker.price;
+      userPrice = Math.round(userPrice * 100) / 100;
+      var userVol = newReq4.response.ticker.volume;
+      userVol = Math.round(userVol * 100) / 100;
+      var userChange = newReq4.response.ticker.change;
+      userChange = Math.round(userChange * 100) / 100;
+      userObject.base = userBase;
+      userObject.price = userPrice;
+      userObject.volume = userVol;
+      userObject.change = userChange;
+      userObject.target = userTarget;
+      userObject.color = userColor;
+      displayTable(userObject);
+    }
+  });
+  newReq4.send();
 }
 
 function createTableTree(object) {
@@ -148,11 +178,54 @@ function createTableTree(object) {
   return createDivElementCol;
 }
 
-function displayBigThreeTable(object) {
+function displayTable(object) {
   var $theGrandDiv = document.querySelector('.table-holder');
   var newTable = createTableTree(object);
-  $theGrandDiv.appendChild(newTable);
+  $theGrandDiv.prepend(newTable);
 }
 getBtcInfo();
 getEthInfo();
 getLinkInfo();
+
+function goBackTables(event) {
+  switchViews('show-tables');
+}
+function goToFormPage(event) {
+  switchViews('table-form');
+}
+
+function switchViews(view) {
+  for (var index = 0; index < $views.length; index++) {
+    if ($views[index].getAttribute('data-view') === view) {
+      $views[index].classList.remove('hidden');
+    } else {
+      $views[index].classList.add('hidden');
+    }
+  }
+}
+
+var $views = document.querySelectorAll('.view-container');
+var $createTableButton = document.querySelector('.table-creator');
+$createTableButton.addEventListener('click', goToFormPage);
+var $closeForm = document.querySelector('.close-form');
+$closeForm.addEventListener('click', goBackTables);
+
+function gatherInputData(event) {
+  event.preventDefault();
+  var inputInfo = {};
+  var tickerValue = $getInfoFromSubmission.elements.ticker.value;
+  var targetValue = $getInfoFromSubmission.elements.target.value;
+  inputInfo.ticker = tickerValue;
+  inputInfo.target = targetValue;
+  inputInfo.tableID = data.nextTableId;
+  data.nextTableId++;
+  data.tables.unshift(inputInfo);
+  getDataForUser(inputInfo);
+  $getInfoFromSubmission.reset();
+  goBackTables();
+}
+
+var $getInfoFromSubmission = document.querySelector('#get-table-form');
+$getInfoFromSubmission.addEventListener('submit', gatherInputData);
+
+var $grabAlert = document.querySelector('.alert-package');

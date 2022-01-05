@@ -13,16 +13,47 @@
 </head>
 <body>
   <header>
-    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-      <span style="font-weight: bold; margin-left: 1rem; font-size: 14px;">Ogma Crypto</span>
+    <nav class="navbar navbar-light row" style="background-color: #e3f2fd;">
+      <span class="main-nav-header col-4 col-lg-7">Ogma Crypto</span>
+      <a class=" col-4 col-lg-2 table-creator">Add a Crypto</a>
     </nav>
   </header>
   <main>
     <div class="container">
-      <div class="table-holder row" data-view="big-three"></div>
+      <div class="row alert-package hidden">
+        <div class="col-8 col-lg-4 alert alert-warning alert-dismissible fade show" role="alert">
+          <h4 class="alert-heading">Invalid Input</h4>
+          Try again with a valid input.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <form id="get-table-form" data-view="table-form" class="view-container hidden">
+        <div class="overlay">
+          <div class="row form-wrapper">
+            <div class="col-8 col-lg-4 form-background modal-fade">
+              <div class="mb-3">
+                <button type="button" class="close close-form" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="mb-3">
+                <label for="table-ticker" class="form-label">Ticker</label>
+                <input type="text" class="form-control" id="table-ticker" name="ticker" placeholder="Add a ticker (ex. btc)" aria-describedby="tickerHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Target</label>
+                <input type="text" class="form-control" id="table-target" name="target" placeholder="Add a target (ex. usd)" aria-describedby="targetHelp">
+              </div>
+              <div class="row the-button"><button type="submit" class="btn btn-outline-primary submission-btn" id="submit" name="submit" value="Submit">Submit</button></div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="table-holder row view-container" data-view="show-tables"></div>
     </div>
   </main>
-  <h1></h1>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
   integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"

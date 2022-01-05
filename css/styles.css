@@ -1,3 +1,7 @@
+.hidden {
+  display: none;
+}
+
 .description {
   font-weight: 525;
 }
@@ -20,4 +24,47 @@
 
 .table-holder {
   justify-content: center;
+}
+
+.navbar {
+  justify-content: space-around;
+}
+
+.main-nav-header {
+  font-weight: bold;
+  margin-left: 1rem;
+  font-size: 14px;
+}
+
+.table-creator {
+  color: #017bff;
+}
+
+.alert-package {
+  justify-content: center;
+}
+
+.form-wrapper {
+  justify-content: center;
+  margin-top: 3vh;
+}
+
+.form-background {
+  background-color: white;
+  padding-bottom: 1rem;
+}
+
+.the-button {
+  justify-content: end;
+  margin-right: 1px;
+  margin-top: 1rem;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
 }
