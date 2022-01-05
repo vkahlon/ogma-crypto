@@ -80,7 +80,7 @@ function getDataForUser(object) {
   newReq4.responseType = 'json';
   newReq4.addEventListener('load', function () {
     if (newReq4.response.success === false) {
-      $grabAlert.classList.remove('hidden');
+      displayAlert();
     } else {
       var userColor = '#2E64B0';
       var userObject = {};
@@ -102,6 +102,40 @@ function getDataForUser(object) {
     }
   });
   newReq4.send();
+}
+function createAlert(event) {
+  var createDiv = document.createElement('div');
+  createDiv.className = 'col-8 col-lg-4 alert alert-warning alert-dismissible fade show';
+  createDiv.setAttribute('role', 'alert');
+
+  var createH4 = document.createElement('h4');
+  createH4.className = 'alert-heading';
+  createH4.textContent = 'Invalid Input';
+  createDiv.appendChild(createH4);
+
+  var createSpan = document.createElement('span');
+  createSpan.textContent = 'Try again with a valid input';
+  createDiv.appendChild(createSpan);
+
+  var createButton = document.createElement('button');
+  createButton.setAttribute('type', 'button');
+  createButton.setAttribute('class', 'close close-alert');
+  createButton.setAttribute('data-dismiss', 'alert');
+  createButton.setAttribute('aria-label', 'Close');
+  createDiv.appendChild(createButton);
+
+  var createSpanTwo = document.createElement('span');
+  createSpanTwo.setAttribute('aria-hidden', 'true');
+  createSpanTwo.innerHTML = '&times;';
+  createButton.appendChild(createSpanTwo);
+
+  return createDiv;
+}
+
+function displayAlert() {
+  var $grabAlertPackage = document.querySelector('.alert-package');
+  var newAlert = createAlert();
+  $grabAlertPackage.appendChild(newAlert);
 }
 
 function createTableTree(object) {
@@ -203,9 +237,6 @@ function switchViews(view) {
     }
   }
 }
-function restoreAlert(event) {
-  $grabAlert.classList.add('hidden');
-}
 
 var $views = document.querySelectorAll('.view-container');
 var $createTableButton = document.querySelector('.table-creator');
@@ -230,8 +261,3 @@ function gatherInputData(event) {
 
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
-
-var $grabAlert = document.querySelector('.alert-package');
-
-var $closeAlert = document.querySelector('.close-alert');
-$closeAlert.addEventListener('click', restoreAlert);
