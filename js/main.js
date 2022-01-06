@@ -82,6 +82,7 @@ function getDataForUser(object) {
     if (newReq4.response.success === false) {
       displayAlert();
     } else {
+      var tableID = object.tableID;
       var userColor = '#2E64B0';
       var userObject = {};
       var userTarget = newReq4.response.ticker.target;
@@ -98,7 +99,8 @@ function getDataForUser(object) {
       userObject.change = userChange;
       userObject.target = userTarget;
       userObject.color = userColor;
-      displayTable(userObject, false);
+      userObject.tableID = tableID;
+      displayUserTable(userObject, false);
     }
   });
   newReq4.send();
@@ -146,8 +148,12 @@ function restoreTables(event) {
 }
 function createTableTree(object, isBigThree) {
   var createDivElementCol = document.createElement('div');
-  createDivElementCol.setAttribute('class', 'col-8 col-lg-4');
-
+  if (isBigThree === true) {
+    createDivElementCol.setAttribute('class', 'col-8 col-lg-4');
+  } else {
+    createDivElementCol.setAttribute('class', 'dom-table col-8 col-lg-4');
+    createDivElementCol.setAttribute('data-view', object.tableID);
+  }
   var createTableElement = document.createElement('table');
   createTableElement.setAttribute('class', 'table table-striped table-hover');
   createDivElementCol.appendChild(createTableElement);
@@ -237,10 +243,15 @@ function createTableTree(object, isBigThree) {
   return createDivElementCol;
 }
 
-function displayTable(object, isBigThree) {
-  var $theGrandDiv = document.querySelector('.table-holder');
+function displayUserTable(object, isBigThree) {
+  var $theGrandDiv = document.querySelector('.user-table');
   var newTable = createTableTree(object, isBigThree);
   $theGrandDiv.prepend(newTable);
+}
+function displayTable(object, isBigThree) {
+  var $theGrandDiv = document.querySelector('.big-three');
+  var newTable = createTableTree(object, isBigThree);
+  $theGrandDiv.append(newTable);
 }
 getBtcInfo();
 getEthInfo();
@@ -284,5 +295,22 @@ function gatherInputData(event) {
   goBackTables();
 }
 
+function editTable() {
+  if (event.target.tagName === 'BUTTON') {
+    var $closestIdiom = event.target.closest('DIV');
+    $closestIdiom = $closestIdiom.getAttribute('data-view');
+    $closestIdiom = parseInt($closestIdiom);
+    for (var i = 0; i < data.tables.length; i++) {
+      var retrieveCorrectTable = data.tables[i].tableID;
+      if (retrieveCorrectTable === $closestIdiom) {
+        // var editUserInput = data.tables[i];
+      }
+    }
+  }
+}
+
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
+
+var $awaitEdit = document.querySelector('.table-holder');
+$awaitEdit.addEventListener('click', editTable);
