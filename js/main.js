@@ -282,15 +282,33 @@ $closeForm.addEventListener('click', goBackTables);
 
 function gatherInputData(event) {
   event.preventDefault();
-  var inputInfo = {};
-  var tickerValue = $getInfoFromSubmission.elements.ticker.value;
-  var targetValue = $getInfoFromSubmission.elements.target.value;
-  inputInfo.ticker = tickerValue;
-  inputInfo.target = targetValue;
-  inputInfo.tableID = data.nextTableId;
-  data.nextTableId++;
-  data.tables.unshift(inputInfo);
-  getDataForUser(inputInfo);
+  if (data.editing === null) {
+    var inputInfo = {};
+    var tickerValue = $getInfoFromSubmission.elements.ticker.value;
+    var targetValue = $getInfoFromSubmission.elements.target.value;
+    inputInfo.ticker = tickerValue;
+    inputInfo.target = targetValue;
+    inputInfo.tableID = data.nextTableId;
+    data.nextTableId++;
+    data.tables.unshift(inputInfo);
+    getDataForUser(inputInfo);
+
+  } else {
+    var editInputInfo = {};
+    var editTickerValue = $getInfoFromSubmission.elements.ticker.value;
+    var editTargetValue = $getInfoFromSubmission.elements.target.value;
+    var grabtheTableValue = data.editing;
+    editInputInfo.ticker = editTickerValue;
+    editInputInfo.target = editTargetValue;
+    editInputInfo.tableID = grabtheTableValue;
+    for (var index = 0; index < data.tables.length; index++) {
+      var retrieveCorrectTable = data.tables[index].tableID;
+      if (grabtheTableValue === retrieveCorrectTable) {
+        data.tables[index] = editInputInfo;
+      }
+    }
+    data.editing = null;
+  }
   $getInfoFromSubmission.reset();
   goBackTables();
 }
@@ -298,6 +316,7 @@ function editTable(object) {
   $grabformTicker.setAttribute('value', object.ticker);
   $grabformTarget.setAttribute('value', object.target);
   $grabformSubmission.textContent = 'Update';
+  data.editing = object.tableID;
 }
 
 function findTable() {
