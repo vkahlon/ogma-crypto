@@ -368,7 +368,22 @@ function resetFormToDefault() {
   $grabformTicker.setAttribute('value', '');
   $grabformTarget.setAttribute('value', '');
   $grabformSubmission.textContent = 'Submit';
+}
 
+function deleteTable(event) {
+  var whichTable = data.editing;
+  var $replaceTable = document.querySelector('[data-view="' + whichTable + '"]');
+  if (whichTable !== null) {
+    for (var i = 0; i < data.tables.length; i++) {
+      var retrieveCorrectTable = data.tables[i].tableID;
+      if (retrieveCorrectTable === whichTable) {
+        data.tables.splice(i, 1);
+        $replaceTable.remove();
+        data.editing = null;
+        goBackTables();
+      }
+    }
+  }
 }
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
@@ -382,5 +397,8 @@ var $grabformSubmission = document.querySelector('#submit');
 var $grabTheDeletion = document.querySelector('.btn-outline-danger');
 $grabTheDeletion.addEventListener('click', bringWarning);
 
-var $cancelDeletion = document.querySelector('.btn-outline-secondary');
+var $cancelDeletion = document.querySelector('.cancel-deletion');
 $cancelDeletion.addEventListener('click', cancelWarning);
+
+var $deleteTheTable = document.querySelector('.delete-table-button');
+$deleteTheTable.addEventListener('click', deleteTable);
