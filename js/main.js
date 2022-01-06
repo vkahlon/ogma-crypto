@@ -1,77 +1,47 @@
-function getBtcInfo() {
+function getBigInfo(object, color) {
   var newReq = new XMLHttpRequest();
-  newReq.open('GET', 'https://api.cryptonator.com/api/ticker/btc-usd');
+  newReq.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
   newReq.responseType = 'json';
   newReq.addEventListener('load', function () {
-    var btcColor = '#F8A33C';
-    var btcObject = {};
-    var btcTarget = newReq.response.ticker.target;
-    var btcBase = newReq.response.ticker.base;
-    var btcPrice = newReq.response.ticker.price;
-    btcPrice = Math.round(btcPrice * 100) / 100;
-    var btcVol = newReq.response.ticker.volume;
-    btcVol = Math.round(btcVol * 100) / 100;
-    var btcChange = newReq.response.ticker.change;
-    btcChange = Math.round(btcChange * 100) / 100;
-    btcObject.base = btcBase;
-    btcObject.price = btcPrice;
-    btcObject.volume = btcVol;
-    btcObject.change = btcChange;
-    btcObject.target = btcTarget;
-    btcObject.color = btcColor;
-    displayTable(btcObject, true);
+    var bigColor = color;
+    var bigObject = {};
+    var bigTarget = newReq.response.ticker.target;
+    var bigBase = newReq.response.ticker.base;
+    var bigPrice = newReq.response.ticker.price;
+    bigPrice = Math.round(bigPrice * 100) / 100;
+    var bigVol = newReq.response.ticker.volume;
+    bigVol = Math.round(bigVol * 100) / 100;
+    var bigChange = newReq.response.ticker.change;
+    bigChange = Math.round(bigChange * 100) / 100;
+    bigObject.base = bigBase;
+    bigObject.price = bigPrice;
+    bigObject.volume = bigVol;
+    bigObject.change = bigChange;
+    bigObject.target = bigTarget;
+    bigObject.color = bigColor;
+    displayTable(bigObject, true);
   });
   newReq.send();
 }
-function getEthInfo() {
-  var newReq2 = new XMLHttpRequest();
-  newReq2.open('Get', 'https://api.cryptonator.com/api/ticker/eth-usd');
-  newReq2.responseType = 'json';
-  newReq2.addEventListener('load', function () {
-    var ethColor = '#768FED';
-    var ethObject = {};
-    var ethBase = newReq2.response.ticker.base;
-    var ethTarget = newReq2.response.ticker.target;
-    var ethPrice = newReq2.response.ticker.price;
-    ethPrice = Math.round(ethPrice * 100) / 100;
-    var ethVol = newReq2.response.ticker.volume;
-    ethVol = Math.round(ethVol);
-    var ethChange = newReq2.response.ticker.change;
-    ethChange = Math.round(ethChange * 100) / 100;
-    ethObject.base = ethBase;
-    ethObject.price = ethPrice;
-    ethObject.volume = ethVol;
-    ethObject.change = ethChange;
-    ethObject.target = ethTarget;
-    ethObject.color = ethColor;
-    displayTable(ethObject, true);
-  });
-  newReq2.send();
-}
-function getLinkInfo() {
-  var newReq3 = new XMLHttpRequest();
-  newReq3.open('Get', 'https://api.cryptonator.com/api/ticker/link-usd');
-  newReq3.responseType = 'json';
-  newReq3.addEventListener('load', function () {
-    var linkColor = 'rgb(38,83,216)';
-    var linkObject = {};
-    var linkTarget = newReq3.response.ticker.target;
-    var linkBase = newReq3.response.ticker.base;
-    var linkPrice = newReq3.response.ticker.price;
-    linkPrice = Math.round(linkPrice * 100) / 100;
-    var linkVol = newReq3.response.ticker.volume;
-    linkVol = Math.round(linkVol);
-    var linkChange = newReq3.response.ticker.change;
-    linkChange = Math.round(linkChange * 100) / 100;
-    linkObject.base = linkBase;
-    linkObject.price = linkPrice;
-    linkObject.volume = linkVol;
-    linkObject.change = linkChange;
-    linkObject.target = linkTarget;
-    linkObject.color = linkColor;
-    displayTable(linkObject, true);
-  });
-  newReq3.send();
+
+function getData(object) {
+  var userColor = '#2E64B0';
+  var userObject = {};
+  var userTarget = object.target;
+  var userBase = object.base;
+  var userPrice = object.price;
+  userPrice = Math.round(userPrice * 100) / 100;
+  var userVol = object.volume;
+  userVol = Math.round(userVol * 100) / 100;
+  var userChange = object.change;
+  userChange = Math.round(userChange * 100) / 100;
+  userObject.base = userBase;
+  userObject.price = userPrice;
+  userObject.volume = userVol;
+  userObject.change = userChange;
+  userObject.target = userTarget;
+  userObject.color = userColor;
+  return userObject;
 }
 
 function getDataForUser(object) {
@@ -81,30 +51,70 @@ function getDataForUser(object) {
   newReq4.addEventListener('load', function () {
     if (newReq4.response.success === false) {
       displayAlert();
+      $getInfoFromSubmission.reset();
     } else {
+      data.tables.unshift(object);
+      data.nextTableId++;
+      var userDataObject = getData(newReq4.response.ticker);
       var tableID = object.tableID;
-      var userColor = '#2E64B0';
-      var userObject = {};
-      var userTarget = newReq4.response.ticker.target;
-      var userBase = newReq4.response.ticker.base;
-      var userPrice = newReq4.response.ticker.price;
-      userPrice = Math.round(userPrice * 100) / 100;
-      var userVol = newReq4.response.ticker.volume;
-      userVol = Math.round(userVol * 100) / 100;
-      var userChange = newReq4.response.ticker.change;
-      userChange = Math.round(userChange * 100) / 100;
-      userObject.base = userBase;
-      userObject.price = userPrice;
-      userObject.volume = userVol;
-      userObject.change = userChange;
-      userObject.target = userTarget;
-      userObject.color = userColor;
-      userObject.tableID = tableID;
-      displayUserTable(userObject, false);
+      userDataObject.tableID = tableID;
+      displayUserTable(userDataObject, false);
     }
   });
   newReq4.send();
 }
+function reGetDataForUser(object) {
+  var newReq5 = new XMLHttpRequest();
+  newReq5.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq5.responseType = 'json';
+  newReq5.addEventListener('load', function () {
+    if (newReq5.response.success === false) {
+      displayAlert();
+      $getInfoFromSubmission.reset();
+    } else {
+      var reGetID = object.tableID;
+      var reGetObject = getData(newReq5.response.ticker);
+      reGetObject.tableID = reGetID;
+      displayUserTable(reGetObject, false);
+      var validtoStore = true;
+      return validtoStore;
+    }
+  });
+  newReq5.send();
+}
+
+function getEditDataForUser(object, tableID) {
+  var newReq5 = new XMLHttpRequest();
+  newReq5.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq5.responseType = 'json';
+  newReq5.addEventListener('load', function () {
+    if (newReq5.response.success === false) {
+      displayAlert();
+      $getInfoFromSubmission.reset();
+    } else {
+      var specifiedTable = tableID;
+      var $replaceTable = document.querySelector('[data-view="' + specifiedTable + '"]');
+      for (var index = 0; index < data.tables.length; index++) {
+        var retrieveCorrectTable = data.tables[index].tableID;
+        if (tableID === retrieveCorrectTable) {
+          data.tables[index] = object;
+        }
+      }
+      var editTableID = object.tableID;
+      var editUserObject = getData(newReq5.response.ticker);
+      editUserObject.tableID = editTableID;
+      var tempReplace = createTableTree(editUserObject, false);
+      for (var i = 0; i < data.tables.length; i++) {
+        var retrievereplacementTable = data.tables[i].tableID;
+        if (tableID === retrievereplacementTable) {
+          $replaceTable.replaceWith(tempReplace);
+        }
+      }
+    }
+  });
+  newReq5.send();
+}
+
 function createAlert(event) {
   var createDiv = document.createElement('div');
   createDiv.className = 'col-8 col-lg-4 alert alert-warning alert-dismissible fade show';
@@ -143,7 +153,7 @@ function displayAlert() {
 window.addEventListener('load', restoreTables);
 function restoreTables(event) {
   for (var index = 0; index < data.tables.length; index++) {
-    getDataForUser(data.tables[index]);
+    reGetDataForUser(data.tables[index]);
   }
 }
 function createTableTree(object, isBigThree) {
@@ -253,12 +263,29 @@ function displayTable(object, isBigThree) {
   var newTable = createTableTree(object, isBigThree);
   $theGrandDiv.append(newTable);
 }
-getBtcInfo();
-getEthInfo();
-getLinkInfo();
+
+function bigInfo() {
+  var btcInput = {
+    ticker: 'btc',
+    target: 'usd'
+  };
+  getBigInfo(btcInput, '#F8A33C');
+  var ethInput = {
+    ticker: 'eth',
+    target: 'usd'
+  };
+  getBigInfo(ethInput, '#768FED');
+  var linkInput = {
+    ticker: 'link',
+    target: 'usd'
+  };
+  getBigInfo(linkInput, 'rgb(38,83,216)');
+}
+bigInfo();
 
 function goBackTables(event) {
   switchViews('show-tables');
+  resetFormToDefault();
 }
 function goToFormPage(event) {
   switchViews('table-form');
@@ -289,9 +316,8 @@ function gatherInputData(event) {
     inputInfo.ticker = tickerValue;
     inputInfo.target = targetValue;
     inputInfo.tableID = data.nextTableId;
-    data.nextTableId++;
-    data.tables.unshift(inputInfo);
     getDataForUser(inputInfo);
+    $getInfoFromSubmission.reset();
 
   } else {
     var editInputInfo = {};
@@ -301,15 +327,10 @@ function gatherInputData(event) {
     editInputInfo.ticker = editTickerValue;
     editInputInfo.target = editTargetValue;
     editInputInfo.tableID = grabtheTableValue;
-    for (var index = 0; index < data.tables.length; index++) {
-      var retrieveCorrectTable = data.tables[index].tableID;
-      if (grabtheTableValue === retrieveCorrectTable) {
-        data.tables[index] = editInputInfo;
-      }
-    }
+    getEditDataForUser(editInputInfo, grabtheTableValue);
     data.editing = null;
   }
-  $getInfoFromSubmission.reset();
+  resetFormToDefault();
   goBackTables();
 }
 function editTable(object) {
@@ -333,6 +354,13 @@ function findTable() {
       }
     }
   }
+}
+
+function resetFormToDefault() {
+  $grabformTicker.setAttribute('value', '');
+  $grabformTarget.setAttribute('value', '');
+  $grabformSubmission.textContent = 'Submit';
+
 }
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
