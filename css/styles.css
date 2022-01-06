@@ -53,15 +53,18 @@
   margin-top: 3vh;
 }
 
+.warning-wrapper {
+  justify-content: center;
+  margin-top: 3vh;
+}
+
 .form-background {
   background-color: white;
   padding-bottom: 1rem;
 }
 
 .the-button {
-  justify-content: end;
-  margin-right: 1px;
-  margin-top: 1rem;
+  justify-content: space-around;
 }
 
 .overlay {
@@ -81,4 +84,11 @@
   font-size: 16px;
   padding: 6px;
   color: #2e64b0;
+}
+
+.warning-message {
+  text-align: center;
+  font-family: Roboto, sans-serif;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }

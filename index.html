@@ -41,11 +41,28 @@
                 <label for="exampleInputEmail1" class="form-label">Target</label>
                 <input type="text" class="form-control" id="table-target" name="target" placeholder="Add a target (ex. usd)" aria-describedby="targetHelp">
               </div>
-              <div class="row the-button"><button type="submit" class="btn btn-outline-primary submission-btn" id="submit" name="submit" value="Submit">Submit</button></div>
+              <div class="row the-button">
+                <button type="button" class="btn btn-outline-danger hidden">Delete</button>
+                <button type="submit" class="btn btn-outline-primary submission-btn" id="submit" name="submit" value="Submit">Submit</button>
+              </div>
             </div>
           </div>
         </div>
       </form>
+      <div data-view="warning-form" class="view-container hidden">
+        <div class="overlay">
+          <div class="row warning-wrapper">
+            <div class="col-8 col-lg-3 form-background modal-fade">
+              <h4 class="warning-message">Delete your Table?</h4>
+              <div class="d-flex justify-content-around">
+                <button type="button" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" class="btn btn-outline-danger">Confirm</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
       <div class="user-table table-holder row view-container" data-view="show-tables"></div>
       <div class="big-three table-holder row view-container" data-view="show-tables"></div>
     </div>

@@ -284,6 +284,7 @@ function bigInfo() {
 bigInfo();
 
 function goBackTables(event) {
+  $grabTheDeletion.classList.add('hidden');
   switchViews('show-tables');
   resetFormToDefault();
 }
@@ -337,6 +338,7 @@ function editTable(object) {
   $grabformTicker.setAttribute('value', object.ticker);
   $grabformTarget.setAttribute('value', object.target);
   $grabformSubmission.textContent = 'Update';
+  $grabTheDeletion.classList.remove('hidden');
   data.editing = object.tableID;
 }
 
@@ -355,7 +357,13 @@ function findTable() {
     }
   }
 }
+function bringWarning() {
+  switchViews('warning-form');
+}
 
+function cancelWarning() {
+  goToFormPage();
+}
 function resetFormToDefault() {
   $grabformTicker.setAttribute('value', '');
   $grabformTarget.setAttribute('value', '');
@@ -370,3 +378,9 @@ $awaitEdit.addEventListener('click', findTable);
 var $grabformTicker = document.querySelector('#table-ticker');
 var $grabformTarget = document.querySelector('#table-target');
 var $grabformSubmission = document.querySelector('#submit');
+
+var $grabTheDeletion = document.querySelector('.btn-outline-danger');
+$grabTheDeletion.addEventListener('click', bringWarning);
+
+var $cancelDeletion = document.querySelector('.btn-outline-secondary');
+$cancelDeletion.addEventListener('click', cancelWarning);
