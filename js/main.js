@@ -294,8 +294,13 @@ function gatherInputData(event) {
   $getInfoFromSubmission.reset();
   goBackTables();
 }
+function editTable(object) {
+  $grabformTicker.setAttribute('value', object.ticker);
+  $grabformTarget.setAttribute('value', object.target);
+  $grabformSubmission.textContent = 'Update';
+}
 
-function editTable() {
+function findTable() {
   if (event.target.tagName === 'BUTTON') {
     var $closestIdiom = event.target.closest('DIV');
     $closestIdiom = $closestIdiom.getAttribute('data-view');
@@ -303,14 +308,18 @@ function editTable() {
     for (var i = 0; i < data.tables.length; i++) {
       var retrieveCorrectTable = data.tables[i].tableID;
       if (retrieveCorrectTable === $closestIdiom) {
-        // var editUserInput = data.tables[i];
+        var editUserInput = data.tables[i];
+        editTable(editUserInput);
+        goToFormPage();
       }
     }
   }
 }
-
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
-
 var $awaitEdit = document.querySelector('.table-holder');
-$awaitEdit.addEventListener('click', editTable);
+$awaitEdit.addEventListener('click', findTable);
+
+var $grabformTicker = document.querySelector('#table-ticker');
+var $grabformTarget = document.querySelector('#table-target');
+var $grabformSubmission = document.querySelector('#submit');
