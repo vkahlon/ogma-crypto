@@ -2,8 +2,11 @@
 var data = {
   view: 'table-form',
   tables: [],
+  marketTables: [],
+  marketEditing: null,
   editing: null,
-  nextTableId: 1
+  nextTableId: 1,
+  nextMarketID: 1
 };
 window.addEventListener('beforeunload', retrieveData);
 var previousEntriesJSON = localStorage.getItem('total-user-input');

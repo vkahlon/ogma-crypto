@@ -39,7 +39,7 @@
                 <input type="text" class="form-control" id="table-ticker" name="ticker" placeholder="Add a ticker (ex. btc)" aria-describedby="tickerHelp">
               </div>
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Target</label>
+                <label for="table-target" class="form-label">Target</label>
                 <input type="text" class="form-control" id="table-target" name="target" placeholder="Add a target (ex. usd)" aria-describedby="targetHelp">
               </div>
               <div class="row the-button">
@@ -78,11 +78,6 @@
                   aria-describedby="tickerHelp">
               </div>
               <div class="mb-3">
-                <label for="comparison-ticker-two" class="form-label">Ticker</label>
-                <input type="text" class="form-control" id="comparison-ticker-two" name="tickerTwo" placeholder="Add a ticker (ex. btc)"
-                  aria-describedby="tickerHelp">
-              </div>
-              <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Target</label>
                 <input type="text" class="form-control" id="comparison-target" name="target" placeholder="Add a target (ex. usd)"
                   aria-describedby="targetHelp">
@@ -95,6 +90,7 @@
           </div>
         </div>
       </form>
+      <div class="compare-table table-holder row view-container" data-view="show-tables"></div>
       <div class="user-table table-holder row view-container" data-view="show-tables"></div>
       <div class="big-three table-holder row view-container" data-view="show-tables"></div>
     </div>

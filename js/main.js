@@ -23,6 +23,24 @@ function getBigInfo(object, color) {
   });
   newReq.send();
 }
+function bigInfo() {
+  var btcInput = {
+    ticker: 'btc',
+    target: 'usd'
+  };
+  getBigInfo(btcInput, '#F8A33C');
+  var ethInput = {
+    ticker: 'eth',
+    target: 'usd'
+  };
+  getBigInfo(ethInput, '#768FED');
+  var linkInput = {
+    ticker: 'link',
+    target: 'usd'
+  };
+  getBigInfo(linkInput, 'rgb(38,83,216)');
+}
+bigInfo();
 
 function getData(object) {
   var userColor = '#2E64B0';
@@ -114,21 +132,69 @@ function getEditDataForUser(object, tableID) {
   });
   newReq5.send();
 }
+function trimData(array) {
+  var trimmedList = [];
+  for (var i = 0; i < 4; i++) {
+    var mrktObject = {};
+    var market = array[i].market;
+    var price = array[i].price;
+    price = Math.round(price * 100) / 100;
+    mrktObject.market = market;
+    mrktObject.price = price;
+    trimmedList.push(mrktObject);
+  }
+  return trimmedList;
+}
 
 function getDataForComparison(object) {
   var newReq2 = new XMLHttpRequest();
-  newReq2.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq2.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
   newReq2.responseType = 'json';
   newReq2.addEventListener('load', function () {
     if (newReq2.response.success === false) {
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
-      var userDataObject = getData(newReq2.response.ticker);
-      data.comparisonTable.unshift(userDataObject);
+      var compareID = data.nextMarketID;
+      data.nextMarketID++;
+      var userDataObject = {};
+      var userDataTicker = newReq2.response.ticker.base;
+      var userDataList = trimData(newReq2.response.ticker.markets);
+      var userDataTarget = newReq2.response.ticker.target;
+      userDataObject.ticker = userDataTicker;
+      userDataObject.list = userDataList;
+      userDataObject.target = userDataTarget;
+      userDataObject.color = '#017bff';
+      userDataObject.marketID = compareID;
+      displayVendorTable(userDataObject);
+      data.marketTables.unshift(userDataObject);
     }
   });
   newReq2.send();
+}
+function reGetComparisonTable(object) {
+  var newReq3 = new XMLHttpRequest();
+  newReq3.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq3.responseType = 'json';
+  newReq3.addEventListener('load', function () {
+    if (newReq3.response.success === false) {
+      displayAlert();
+      $getInfoFromSubmission.reset();
+    } else {
+      var compareID = object.marketID;
+      var userDataObject = {};
+      var userDataTicker = newReq3.response.ticker.base;
+      var userDataList = trimData(newReq3.response.ticker.markets);
+      var userDataTarget = newReq3.response.ticker.target;
+      userDataObject.ticker = userDataTicker;
+      userDataObject.list = userDataList;
+      userDataObject.target = userDataTarget;
+      userDataObject.color = '#017bff';
+      userDataObject.marketID = compareID;
+      displayVendorTable(userDataObject);
+    }
+  });
+  newReq3.send();
 }
 
 function createAlert(event) {
@@ -167,10 +233,101 @@ function displayAlert() {
 }
 
 window.addEventListener('load', restoreTables);
+window.addEventListener('load', vendorTables);
 function restoreTables(event) {
   for (var index = 0; index < data.tables.length; index++) {
     reGetDataForUser(data.tables[index]);
   }
+}
+function vendorTables(event) {
+  for (var index = 0; index < data.marketTables.length; index++) {
+    reGetComparisonTable(data.marketTables[index]);
+  }
+}
+function compareTableTree(object) {
+  var createDivCompare = document.createElement('div');
+  createDivCompare.setAttribute('class', 'col-8 col-lg-4');
+  createDivCompare.setAttribute('data-view', object.tableID);
+
+  var createTableElement = document.createElement('table');
+  createTableElement.setAttribute('class', 'table table-striped table-hover');
+  createDivCompare.appendChild(createTableElement);
+
+  var createTableHead = document.createElement('thead');
+  createTableElement.appendChild(createTableHead);
+  var createTableRow = document.createElement('tr');
+  createTableHead.appendChild(createTableRow);
+  var createTh = document.createElement('th');
+  createTh.setAttribute('colspan', '2');
+  createTh.setAttribute('style', 'color: ' + object.color);
+  createTableRow.appendChild(createTh);
+
+  var createSpanAlpha = document.createElement('span');
+  createSpanAlpha.className = 'table-header d-flex justify-content-between table-header';
+  createSpanAlpha.textContent = object.ticker + ' Markets';
+  createTh.appendChild(createSpanAlpha);
+
+  var createIconButton = document.createElement('button');
+  createIconButton.className = 'btn btn-outline-primary rounded fas fas-compare fa-pencil-alt';
+  createSpanAlpha.appendChild(createIconButton);
+
+  var createTableBody = document.createElement('tbody');
+  createTableElement.appendChild(createTableBody);
+
+  var createTableRowTwo = document.createElement('tr');
+  createTableBody.appendChild(createTableRowTwo);
+
+  var createTableCellOne = document.createElement('td');
+  createTableCellOne.setAttribute('class', 'description');
+  createTableCellOne.textContent = object.list[0].market;
+  createTableRowTwo.appendChild(createTableCellOne);
+
+  var createTableCellTwo = document.createElement('td');
+  createTableCellTwo.setAttribute('class', 'col-5');
+  createTableCellTwo.textContent = object.list[0].price + ' ' + object.target;
+  createTableRowTwo.appendChild(createTableCellTwo);
+
+  var createTableRowThree = document.createElement('tr');
+  createTableBody.appendChild(createTableRowThree);
+
+  var createTableCellThree = document.createElement('td');
+  createTableCellThree.setAttribute('class', 'description');
+  createTableCellThree.textContent = object.list[1].market;
+  createTableRowThree.appendChild(createTableCellThree);
+
+  var createTableCellFour = document.createElement('td');
+  createTableCellFour.textContent = object.list[1].price + ' ' + object.target;
+  createTableRowThree.appendChild(createTableCellFour);
+
+  var createTableRowFour = document.createElement('tr');
+  createTableBody.appendChild(createTableRowFour);
+
+  var createTableCellFive = document.createElement('td');
+  createTableCellFive.setAttribute('class', 'description');
+  createTableCellFive.textContent = object.list[2].market;
+  createTableRowFour.appendChild(createTableCellFive);
+
+  var createTableCellSix = document.createElement('td');
+  createTableCellSix.textContent = object.list[2].price + ' ' + object.target;
+  createTableRowFour.appendChild(createTableCellSix);
+
+  var createTableRowFive = document.createElement('tr');
+  createTableBody.appendChild(createTableRowFive);
+
+  var createTableCellSeven = document.createElement('td');
+  createTableCellSeven.setAttribute('class', 'description');
+  createTableCellSeven.textContent = object.list[2].market;
+  createTableRowFive.appendChild(createTableCellSeven);
+
+  var createTableCellEight = document.createElement('td');
+  createTableCellEight.textContent = object.list[2].price + ' ' + object.target;
+  createTableRowFive.appendChild(createTableCellEight);
+  return createDivCompare;
+}
+function displayVendorTable(object) {
+  var $headDiv = document.querySelector('.compare-table');
+  var newCompareTable = compareTableTree(object);
+  $headDiv.prepend(newCompareTable);
 }
 function createTableTree(object, isBigThree) {
   var createDivElementCol = document.createElement('div');
@@ -268,7 +425,6 @@ function createTableTree(object, isBigThree) {
   createTableRowFive.appendChild(createTableCellEight);
   return createDivElementCol;
 }
-
 function displayUserTable(object, isBigThree) {
   var $theGrandDiv = document.querySelector('.user-table');
   var newTable = createTableTree(object, isBigThree);
@@ -279,27 +435,8 @@ function displayTable(object, isBigThree) {
   var newTable = createTableTree(object, isBigThree);
   $theGrandDiv.append(newTable);
 }
-
-function bigInfo() {
-  var btcInput = {
-    ticker: 'btc',
-    target: 'usd'
-  };
-  getBigInfo(btcInput, '#F8A33C');
-  var ethInput = {
-    ticker: 'eth',
-    target: 'usd'
-  };
-  getBigInfo(ethInput, '#768FED');
-  var linkInput = {
-    ticker: 'link',
-    target: 'usd'
-  };
-  getBigInfo(linkInput, 'rgb(38,83,216)');
-}
-bigInfo();
-
 function goBackTables(event) {
+  data.editing = null;
   $grabTheDeletion.classList.add('hidden');
   switchViews('show-tables');
   resetFormToDefault();
@@ -415,12 +552,11 @@ function compareForm(event) {
   switchViews('comparison-form');
 }
 function closeComparison(event) {
-  $selectComparisonForm.reset();
   switchViews('show-tables');
 }
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
-var $awaitEdit = document.querySelector('.table-holder');
+var $awaitEdit = document.querySelector('.user-table');
 $awaitEdit.addEventListener('click', findTable);
 
 var $grabformTicker = document.querySelector('#table-ticker');
@@ -441,6 +577,6 @@ $activateComparisonForm.addEventListener('click', compareForm);
 
 var $closeComparisonForm = document.querySelector('.close-comparison');
 $closeComparisonForm.addEventListener('click', closeComparison);
-var $selectComparisonForm = document.querySelector('#get-comparison-form');
+
 var $getInfoFromComparison = document.querySelector('#get-comparison-form');
 $getInfoFromComparison.addEventListener('submit', getComparisonData);
