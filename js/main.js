@@ -114,21 +114,22 @@ function getEditDataForUser(object, tableID) {
   });
   newReq5.send();
 }
-// function getDataForComparison(object) {
-//   var newReq2 = new XMLHttpRequest();
-//   newReq2.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
-//   newReq2.responseType = 'json';
-//   newReq2.addEventListener('load', function () {
-//     if (newReq2.response.success === false) {
-//       displayAlert();
-//       $getInfoFromSubmission.reset();
-//     } else {
-//       var userDataObject = newReq2.response;
-//       return userDataObject;
-//     }
-//   });
-//   newReq2.send();
-// }
+
+function getDataForComparison(object) {
+  var newReq2 = new XMLHttpRequest();
+  newReq2.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq2.responseType = 'json';
+  newReq2.addEventListener('load', function () {
+    if (newReq2.response.success === false) {
+      displayAlert();
+      $getInfoFromSubmission.reset();
+    } else {
+      var userDataObject = getData(newReq2.response.ticker);
+      data.comparisonTable.unshift(userDataObject);
+    }
+  });
+  newReq2.send();
+}
 
 function createAlert(event) {
   var createDiv = document.createElement('div');
@@ -352,18 +353,12 @@ function gatherInputData(event) {
 function getComparisonData(event) {
   event.preventDefault();
   var tokenOne = {};
-  var tokenTwo = {};
   var tokenOneTicker = $getInfoFromComparison.elements.ticker.value;
-  var tokenTwoTicker = $getInfoFromComparison.elements.tickerTwo.value;
   var tokensTarget = $getInfoFromComparison.elements.target.value;
   tokenOne.ticker = tokenOneTicker;
   tokenOne.target = tokensTarget;
-  tokenTwo.ticker = tokenTwoTicker;
-  tokenTwo.target = tokensTarget;
-  // tokenOne = getDataForComparison(tokenOne);
-  // tokenTwo = getDataForComparison(tokenTwo);
-  // console.log(tokenOne);
-  // console.log(tokenTwo);
+  getDataForComparison(tokenOne);
+  switchViews('show-tables');
 }
 function editTable(object) {
   $grabformTicker.setAttribute('value', object.ticker);
