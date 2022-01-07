@@ -385,6 +385,13 @@ function deleteTable(event) {
     }
   }
 }
+function compareForm(event) {
+  switchViews('comparison-form');
+}
+function closeComparison(event) {
+  switchViews('show-tables');
+
+}
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
 var $awaitEdit = document.querySelector('.table-holder');
@@ -402,3 +409,9 @@ $cancelDeletion.addEventListener('click', cancelWarning);
 
 var $deleteTheTable = document.querySelector('.delete-table-button');
 $deleteTheTable.addEventListener('click', deleteTable);
+
+var $activateComparisonForm = document.querySelector('.comparison-creator');
+$activateComparisonForm.addEventListener('click', compareForm);
+
+var $closeComparisonForm = document.querySelector('.close-comparison');
+$closeComparisonForm.addEventListener('click', closeComparison);
