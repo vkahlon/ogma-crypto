@@ -156,7 +156,6 @@ function getDataForComparison(object) {
       $getInfoFromSubmission.reset();
     } else {
       var compareID = data.nextMarketID;
-      data.nextMarketID++;
       var userDataObject = {};
       var userDataTicker = newReq2.response.ticker.base;
       var userDataList = trimData(newReq2.response.ticker.markets);
@@ -168,13 +167,14 @@ function getDataForComparison(object) {
       userDataObject.marketID = compareID;
       displayVendorTable(userDataObject);
       data.marketTables.unshift(userDataObject);
+      data.nextMarketID++;
     }
   });
   newReq2.send();
 }
 function reGetComparisonTable(object) {
   var newReq3 = new XMLHttpRequest();
-  newReq3.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq3.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
   newReq3.responseType = 'json';
   newReq3.addEventListener('load', function () {
     if (newReq3.response.success === false) {
@@ -247,7 +247,7 @@ function vendorTables(event) {
 function compareTableTree(object) {
   var createDivCompare = document.createElement('div');
   createDivCompare.setAttribute('class', 'col-8 col-lg-4');
-  createDivCompare.setAttribute('data-view', object.tableID);
+  createDivCompare.setAttribute('data-view', object.marketID);
 
   var createTableElement = document.createElement('table');
   createTableElement.setAttribute('class', 'table table-striped table-hover');
@@ -316,11 +316,11 @@ function compareTableTree(object) {
 
   var createTableCellSeven = document.createElement('td');
   createTableCellSeven.setAttribute('class', 'description');
-  createTableCellSeven.textContent = object.list[2].market;
+  createTableCellSeven.textContent = object.list[3].market;
   createTableRowFive.appendChild(createTableCellSeven);
 
   var createTableCellEight = document.createElement('td');
-  createTableCellEight.textContent = object.list[2].price + ' ' + object.target;
+  createTableCellEight.textContent = object.list[3].price + ' ' + object.target;
   createTableRowFive.appendChild(createTableCellEight);
   return createDivCompare;
 }
@@ -444,6 +444,15 @@ function goBackTables(event) {
 function goToFormPage(event) {
   switchViews('table-form');
 }
+function compareForm(event) {
+  switchViews('comparison-form');
+}
+function closeComparison(event) {
+  data.marketEditing = null;
+  $grabCompDeleteButton.classList.add('hidden');
+  resetComparisonFormToDefault();
+  switchViews('show-tables');
+}
 
 function switchViews(view) {
   for (var index = 0; index < $views.length; index++) {
@@ -504,6 +513,28 @@ function editTable(object) {
   $grabTheDeletion.classList.remove('hidden');
   data.editing = object.tableID;
 }
+function editComparisonTable(object) {
+  $grabCompTicker.setAttribute('value', object.ticker);
+  $grabCompTarget.setAttribute('value', object.target);
+  $grabCompSubmission.textContent = 'Update';
+  $grabCompDeleteButton.classList.remove('hidden');
+  data.marketEditing = object.marketID;
+}
+function findComparisonTable() {
+  if (event.target.tagName === 'BUTTON') {
+    var $closestIdiom = event.target.closest('DIV');
+    $closestIdiom = $closestIdiom.getAttribute('data-view');
+    $closestIdiom = parseInt($closestIdiom);
+    for (var i = 0; i < data.marketTables.length; i++) {
+      var retrieveCorrectTable = data.marketTables[i].marketID;
+      if (retrieveCorrectTable === $closestIdiom) {
+        var editCompTable = data.marketTables[i];
+        editComparisonTable(editCompTable);
+        compareForm();
+      }
+    }
+  }
+}
 
 function findTable() {
   if (event.target.tagName === 'BUTTON') {
@@ -532,6 +563,11 @@ function resetFormToDefault() {
   $grabformTarget.setAttribute('value', '');
   $grabformSubmission.textContent = 'Submit';
 }
+function resetComparisonFormToDefault() {
+  $grabCompTicker.setAttribute('value', '');
+  $grabCompTarget.setAttribute('value', '');
+  $grabCompSubmission.textContent = 'Submit';
+}
 
 function deleteTable(event) {
   var whichTable = data.editing;
@@ -548,12 +584,6 @@ function deleteTable(event) {
     }
   }
 }
-function compareForm(event) {
-  switchViews('comparison-form');
-}
-function closeComparison(event) {
-  switchViews('show-tables');
-}
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
 var $awaitEdit = document.querySelector('.user-table');
@@ -563,7 +593,12 @@ var $grabformTicker = document.querySelector('#table-ticker');
 var $grabformTarget = document.querySelector('#table-target');
 var $grabformSubmission = document.querySelector('#submit');
 
-var $grabTheDeletion = document.querySelector('.btn-outline-danger');
+var $grabCompTicker = document.querySelector('#comparison-ticker');
+var $grabCompTarget = document.querySelector('#comparison-target');
+var $grabCompSubmission = document.querySelector('#submitComparison');
+var $grabCompDeleteButton = document.querySelector('.warning-button-two');
+
+var $grabTheDeletion = document.querySelector('.warning-button-one');
 $grabTheDeletion.addEventListener('click', bringWarning);
 
 var $cancelDeletion = document.querySelector('.cancel-deletion');
@@ -580,3 +615,6 @@ $closeComparisonForm.addEventListener('click', closeComparison);
 
 var $getInfoFromComparison = document.querySelector('#get-comparison-form');
 $getInfoFromComparison.addEventListener('submit', getComparisonData);
+
+var $acessCompareTable = document.querySelector('.compare-table');
+$acessCompareTable.addEventListener('click', findComparisonTable);
