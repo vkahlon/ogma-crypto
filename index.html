@@ -19,6 +19,7 @@
     <nav class="navbar navbar-light row" style="background-color: #e3f2fd;">
       <span class="main-nav-header col-4 col-lg-7">Ogma Crypto</span>
       <a class=" col-4 col-lg-2 table-creator">Add a Crypto</a>
+      <a class=" col-2 col-lg-2 comparison-creator">Compare</a>
     </nav>
   </header>
   <main>
@@ -38,11 +39,11 @@
                 <input type="text" class="form-control" id="table-ticker" name="ticker" placeholder="Add a ticker (ex. btc)" aria-describedby="tickerHelp">
               </div>
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Target</label>
+                <label for="table-target" class="form-label">Target</label>
                 <input type="text" class="form-control" id="table-target" name="target" placeholder="Add a target (ex. usd)" aria-describedby="targetHelp">
               </div>
               <div class="row the-button">
-                <button type="button" class="btn btn-outline-danger hidden">Delete</button>
+                <button type="button" class="warning-button-one btn btn-outline-danger hidden">Delete</button>
                 <button type="submit" class="btn btn-outline-primary submission-btn" id="submit" name="submit" value="Submit">Submit</button>
               </div>
             </div>
@@ -60,9 +61,49 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
+      <form id="get-comparison-form" data-view="comparison-form" class="view-container hidden">
+        <div class="overlay">
+          <div class="row form-wrapper">
+            <div class="col-8 col-lg-4 form-background modal-fade">
+              <div class="mb-3">
+                <button type="button" class="close close-comparison" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="mb-3">
+                <label for="comparison-ticker" class="form-label">Ticker</label>
+                <input type="text" class="form-control" id="comparison-ticker" name="ticker" placeholder="Add a ticker (ex. btc)"
+                  aria-describedby="tickerHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Target</label>
+                <input type="text" class="form-control" id="comparison-target" name="target" placeholder="Add a target (ex. usd)"
+                  aria-describedby="targetHelp">
+              </div>
+              <div class="row the-button">
+                <button type="button" class="warning-button-two btn btn-outline-danger hidden">Delete</button>
+                <button type="submit" class="btn btn-outline-primary submission-btn" id="submitComparison" name="submit" value="Submit">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div data-view="warning-form-comparison" class="view-container hidden">
+        <div class="overlay">
+          <div class="row warning-wrapper">
+            <div class="col-8 col-lg-3 form-background modal-fade">
+              <h4 class="warning-message">Delete your Table?</h4>
+              <div class="d-flex justify-content-around">
+                <button type="button" class="cancel-deletion-comparison btn btn-outline-secondary">Cancel</button>
+                <button type="button" class="delete-comparison-button btn btn-outline-danger">Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="compare-table table-holder row view-container" data-view="show-tables"></div>
       <div class="user-table table-holder row view-container" data-view="show-tables"></div>
       <div class="big-three table-holder row view-container" data-view="show-tables"></div>
     </div>

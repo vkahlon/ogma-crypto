@@ -35,7 +35,6 @@
 
 .main-nav-header {
   font-weight: bold;
-  margin-left: 1rem;
   font-size: 14px;
 }
 
@@ -60,6 +59,7 @@
 
 .form-background {
   background-color: white;
+  padding-top: 7px;
   padding-bottom: 1rem;
 }
 
@@ -84,6 +84,10 @@
   font-size: 16px;
   padding: 6px;
   color: #2e64b0;
+}
+
+.fas-compare {
+  color: #017bff;
 }
 
 .warning-message {
