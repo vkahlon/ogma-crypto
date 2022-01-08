@@ -607,6 +607,9 @@ function bringWarning() {
 function cancelWarning() {
   goToFormPage();
 }
+function bringWarningComparison() {
+  switchViews('warning-form-comparison');
+}
 function resetFormToDefault() {
   $grabformTicker.setAttribute('value', '');
   $grabformTarget.setAttribute('value', '');
@@ -633,6 +636,21 @@ function deleteTable(event) {
     }
   }
 }
+function deleteComparisonTable(event) {
+  var whichComparisonTable = data.marketEditing;
+  var $replaceCompareTable = document.querySelector('[data-view="' + whichComparisonTable + '"]');
+  if (whichComparisonTable !== null) {
+    for (var i = 0; i < data.marketTables.length; i++) {
+      var retrieveCorrectTable = data.marketTables[i].marketID;
+      if (retrieveCorrectTable === whichComparisonTable) {
+        data.marketTables.splice(i, 1);
+        $replaceCompareTable.remove();
+        data.marketEditing = null;
+        goBackTables();
+      }
+    }
+  }
+}
 var $getInfoFromSubmission = document.querySelector('#get-table-form');
 $getInfoFromSubmission.addEventListener('submit', gatherInputData);
 var $awaitEdit = document.querySelector('.user-table');
@@ -645,7 +663,9 @@ var $grabformSubmission = document.querySelector('#submit');
 var $grabCompTicker = document.querySelector('#comparison-ticker');
 var $grabCompTarget = document.querySelector('#comparison-target');
 var $grabCompSubmission = document.querySelector('#submitComparison');
+
 var $grabCompDeleteButton = document.querySelector('.warning-button-two');
+$grabCompDeleteButton.addEventListener('click', bringWarningComparison);
 
 var $grabTheDeletion = document.querySelector('.warning-button-one');
 $grabTheDeletion.addEventListener('click', bringWarning);
@@ -667,3 +687,9 @@ $getInfoFromComparison.addEventListener('submit', getComparisonInputData);
 
 var $acessCompareTable = document.querySelector('.compare-table');
 $acessCompareTable.addEventListener('click', findComparisonTable);
+
+var $comparisonDeleteButton = document.querySelector('.cancel-deletion-comparison');
+$comparisonDeleteButton.addEventListener('click', compareForm);
+
+var $deleteComparisonTable = document.querySelector('.delete-comparison-button');
+$deleteComparisonTable.addEventListener('click', deleteComparisonTable);
