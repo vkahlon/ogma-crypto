@@ -6,7 +6,7 @@ var data = {
   marketEditing: null,
   editing: null,
   nextTableId: 1,
-  nextMarketID: 1
+  nextMarketID: 100
 };
 window.addEventListener('beforeunload', retrieveData);
 var previousEntriesJSON = localStorage.getItem('total-user-input');

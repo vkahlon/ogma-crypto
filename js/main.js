@@ -153,7 +153,7 @@ function getDataForComparison(object) {
   newReq2.addEventListener('load', function () {
     if (newReq2.response.success === false) {
       displayAlert();
-      $getInfoFromSubmission.reset();
+      $getInfoFromComparison.reset();
     } else {
       var compareID = data.nextMarketID;
       var userDataObject = {};
@@ -179,7 +179,7 @@ function reGetComparisonTable(object) {
   newReq3.addEventListener('load', function () {
     if (newReq3.response.success === false) {
       displayAlert();
-      $getInfoFromSubmission.reset();
+      $getInfoFromComparison.reset();
     } else {
       var compareID = object.marketID;
       var userDataObject = {};
@@ -196,7 +196,43 @@ function reGetComparisonTable(object) {
   });
   newReq3.send();
 }
-
+function retrieveEditComparisonTable(object, compareTableID) {
+  var newReq4 = new XMLHttpRequest();
+  newReq4.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
+  newReq4.responseType = 'json';
+  newReq4.addEventListener('load', function () {
+    if (newReq4.response.success === false) {
+      displayAlert();
+      $getInfoFromComparison.reset();
+    } else {
+      var tableID = compareTableID;
+      var $replaceCompareTable = document.querySelector('[data-view="' + tableID + '"]');
+      for (var index = 0; index < data.marketTables.length; index++) {
+        var retrieveCorrectTable = data.marketTables[index].marketID;
+        if (tableID === retrieveCorrectTable) {
+          data.marketTables[index] = object;
+        }
+      }
+      var userDataObject = {};
+      var userDataTicker = newReq4.response.ticker.base;
+      var userDataList = trimData(newReq4.response.ticker.markets);
+      var userDataTarget = newReq4.response.ticker.target;
+      userDataObject.ticker = userDataTicker;
+      userDataObject.list = userDataList;
+      userDataObject.target = userDataTarget;
+      userDataObject.color = '#017bff';
+      userDataObject.marketID = tableID;
+      var tempCompareTable = compareTableTree(userDataObject);
+      for (var i = 0; i < data.marketTables.length; i++) {
+        var retrieveReplacementTable = data.marketTables[i].marketID;
+        if (tableID === retrieveReplacementTable) {
+          $replaceCompareTable.replaceWith(tempCompareTable);
+        }
+      }
+    }
+  });
+  newReq4.send();
+}
 function createAlert(event) {
   var createDiv = document.createElement('div');
   createDiv.className = 'col-8 col-lg-4 alert alert-warning alert-dismissible fade show';
@@ -496,14 +532,27 @@ function gatherInputData(event) {
   resetFormToDefault();
   goBackTables();
 }
-function getComparisonData(event) {
+function getComparisonInputData(event) {
   event.preventDefault();
-  var tokenOne = {};
-  var tokenOneTicker = $getInfoFromComparison.elements.ticker.value;
-  var tokensTarget = $getInfoFromComparison.elements.target.value;
-  tokenOne.ticker = tokenOneTicker;
-  tokenOne.target = tokensTarget;
-  getDataForComparison(tokenOne);
+  if (data.marketEditing === null) {
+    var tokenOne = {};
+    var tokenOneTicker = $getInfoFromComparison.elements.ticker.value;
+    var tokensTarget = $getInfoFromComparison.elements.target.value;
+    tokenOne.ticker = tokenOneTicker;
+    tokenOne.target = tokensTarget;
+    getDataForComparison(tokenOne);
+  } else {
+    var editTokenOne = {};
+    var editTokenOneTicker = $getInfoFromComparison.elements.ticker.value;
+    var editTokensTarget = $getInfoFromComparison.elements.target.value;
+    var grabCompareToken = data.marketEditing;
+    editTokenOne.ticker = editTokenOneTicker;
+    editTokenOne.target = editTokensTarget;
+    editTokenOne.marketID = grabCompareToken;
+    retrieveEditComparisonTable(editTokenOne, grabCompareToken);
+    data.marketEditing = null;
+  }
+  resetComparisonFormToDefault();
   switchViews('show-tables');
 }
 function editTable(object) {
@@ -614,7 +663,7 @@ var $closeComparisonForm = document.querySelector('.close-comparison');
 $closeComparisonForm.addEventListener('click', closeComparison);
 
 var $getInfoFromComparison = document.querySelector('#get-comparison-form');
-$getInfoFromComparison.addEventListener('submit', getComparisonData);
+$getInfoFromComparison.addEventListener('submit', getComparisonInputData);
 
 var $acessCompareTable = document.querySelector('.compare-table');
 $acessCompareTable.addEventListener('click', findComparisonTable);
