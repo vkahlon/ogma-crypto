@@ -1,3 +1,17 @@
+function testConnectivity() {
+  var newReq = new XMLHttpRequest();
+  newReq.open('GET', 'https://api.cryptonator.com/api/ticker/btc-usd');
+  newReq.onreadystatechange = function () {
+    if (newReq.readyState === XMLHttpRequest.DONE) {
+      var status = newReq.status;
+      if (status !== 200) {
+        return displayNetworkAlert();
+      }
+    }
+  };
+  newReq.send();
+}
+testConnectivity();
 function getBigInfo(object, color) {
   var newReq = new XMLHttpRequest();
   newReq.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
@@ -20,6 +34,7 @@ function getBigInfo(object, color) {
     bigObject.target = bigTarget;
     bigObject.color = bigColor;
     displayTable(bigObject, true);
+    $accessLoadSignal.remove();
   });
   newReq.send();
 }
@@ -261,10 +276,44 @@ function createAlert(event) {
 
   return createDiv;
 }
+function createNetworkAlert(event) {
+  var createDiv = document.createElement('div');
+  createDiv.className = 'col-8 col-lg-4 alert alert-danger alert-dismissible fade show';
+  createDiv.setAttribute('role', 'alert');
+
+  var createH4 = document.createElement('h4');
+  createH4.className = 'alert-heading';
+  createH4.textContent = 'Network Connection Issue';
+  createDiv.appendChild(createH4);
+
+  var createSpan = document.createElement('span');
+  createSpan.textContent = 'Sorry, there was an error connecting to the network! Please check your internet connection and try again.';
+  createDiv.appendChild(createSpan);
+
+  var createButton = document.createElement('button');
+  createButton.setAttribute('type', 'button');
+  createButton.setAttribute('class', 'close close-alert');
+  createButton.setAttribute('data-dismiss', 'alert');
+  createButton.setAttribute('aria-label', 'Close');
+  createDiv.appendChild(createButton);
+
+  var createSpanTwo = document.createElement('span');
+  createSpanTwo.setAttribute('aria-hidden', 'true');
+  createSpanTwo.innerHTML = '&times;';
+  createButton.appendChild(createSpanTwo);
+
+  return createDiv;
+}
 
 function displayAlert() {
   var $grabAlertPackage = document.querySelector('.alert-package');
   var newAlert = createAlert();
+  $grabAlertPackage.appendChild(newAlert);
+}
+
+function displayNetworkAlert() {
+  var $grabAlertPackage = document.querySelector('.alert-package');
+  var newAlert = createNetworkAlert();
   $grabAlertPackage.appendChild(newAlert);
 }
 
@@ -693,3 +742,5 @@ $comparisonDeleteButton.addEventListener('click', compareForm);
 
 var $deleteComparisonTable = document.querySelector('.delete-comparison-button');
 $deleteComparisonTable.addEventListener('click', deleteComparisonTable);
+
+var $accessLoadSignal = document.querySelector('.table-loader-signal');
