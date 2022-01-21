@@ -42,17 +42,9 @@
   color: #017bff;
 }
 
+.form-wrapper,
+.warning-wrapper,
 .alert-package {
-  justify-content: center;
-  margin-top: 2vh;
-}
-
-.form-wrapper {
-  justify-content: center;
-  margin-top: 3vh;
-}
-
-.warning-wrapper {
   justify-content: center;
   margin-top: 3vh;
 }
