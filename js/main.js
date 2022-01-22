@@ -5,7 +5,8 @@ function testConnectivity() {
     if (newReq.readyState === XMLHttpRequest.DONE) {
       var status = newReq.status;
       if (status !== 200) {
-        return displayNetworkAlert();
+        displayNetworkAlert();
+        $accessLoadSignal.className = 'hidden';
       }
     }
   };
@@ -33,8 +34,8 @@ function getBigInfo(object, color) {
     bigObject.change = bigChange;
     bigObject.target = bigTarget;
     bigObject.color = bigColor;
+    $accessLoadSignal.className = 'hidden';
     displayTable(bigObject, true);
-    $accessLoadSignal.remove();
   });
   newReq.send();
 }
@@ -78,11 +79,13 @@ function getData(object) {
 }
 
 function getDataForUser(object) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq4 = new XMLHttpRequest();
   newReq4.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
   newReq4.responseType = 'json';
   newReq4.addEventListener('load', function () {
     if (newReq4.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
@@ -91,23 +94,27 @@ function getDataForUser(object) {
       var userDataObject = getData(newReq4.response.ticker);
       var tableID = object.tableID;
       userDataObject.tableID = tableID;
+      $accessLoadSignal.className = 'hidden';
       displayUserTable(userDataObject, false);
     }
   });
   newReq4.send();
 }
 function reGetDataForUser(object) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq5 = new XMLHttpRequest();
   newReq5.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
   newReq5.responseType = 'json';
   newReq5.addEventListener('load', function () {
     if (newReq5.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
       var reGetID = object.tableID;
       var reGetObject = getData(newReq5.response.ticker);
       reGetObject.tableID = reGetID;
+      $accessLoadSignal.className = 'hidden';
       displayUserTable(reGetObject, false);
       var validtoStore = true;
       return validtoStore;
@@ -117,14 +124,17 @@ function reGetDataForUser(object) {
 }
 
 function getEditDataForUser(object, tableID) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq5 = new XMLHttpRequest();
   newReq5.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
   newReq5.responseType = 'json';
   newReq5.addEventListener('load', function () {
     if (newReq5.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
+      $accessLoadSignal.className = 'hidden';
       var specifiedTable = tableID;
       var $replaceTable = document.querySelector('[data-view="' + specifiedTable + '"]');
       for (var index = 0; index < data.tables.length; index++) {
@@ -162,14 +172,17 @@ function trimData(array) {
 }
 
 function getDataForComparison(object) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq2 = new XMLHttpRequest();
   newReq2.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
   newReq2.responseType = 'json';
   newReq2.addEventListener('load', function () {
     if (newReq2.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
     } else {
+      $accessLoadSignal.className = 'hidden';
       var compareID = data.nextMarketID;
       var userDataObject = {};
       var userDataTicker = newReq2.response.ticker.base;
@@ -188,14 +201,17 @@ function getDataForComparison(object) {
   newReq2.send();
 }
 function reGetComparisonTable(object) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq3 = new XMLHttpRequest();
   newReq3.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
   newReq3.responseType = 'json';
   newReq3.addEventListener('load', function () {
     if (newReq3.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
     } else {
+      $accessLoadSignal.className = 'hidden';
       var compareID = object.marketID;
       var userDataObject = {};
       var userDataTicker = newReq3.response.ticker.base;
@@ -212,14 +228,18 @@ function reGetComparisonTable(object) {
   newReq3.send();
 }
 function retrieveEditComparisonTable(object, compareTableID) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
+
   var newReq4 = new XMLHttpRequest();
   newReq4.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
   newReq4.responseType = 'json';
   newReq4.addEventListener('load', function () {
     if (newReq4.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
     } else {
+      $accessLoadSignal.className = 'hidden';
       var tableID = compareTableID;
       var $replaceCompareTable = document.querySelector('[data-view="' + tableID + '"]');
       for (var index = 0; index < data.marketTables.length; index++) {
@@ -287,7 +307,7 @@ function createNetworkAlert(event) {
   createDiv.appendChild(createH4);
 
   var createSpan = document.createElement('span');
-  createSpan.textContent = 'Sorry, there was an error connecting to the network! Please check your internet connection and try again.';
+  createSpan.textContent = 'Please check your internet connection and try again.';
   createDiv.appendChild(createSpan);
 
   var createButton = document.createElement('button');
