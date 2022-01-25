@@ -307,7 +307,7 @@ function createNetworkAlert(event) {
   createDiv.appendChild(createH4);
 
   var createSpan = document.createElement('span');
-  createSpan.textContent = 'Please check your internet connection and try again.';
+  createSpan.textContent = 'Please check your internet connection and try again. If the issue persists, please try again later.';
   createDiv.appendChild(createSpan);
 
   var createButton = document.createElement('button');
