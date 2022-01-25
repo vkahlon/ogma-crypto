@@ -1,3 +1,5 @@
-# ajax-project
+# ogma-crypto
 
-A dynamic HTML, CSS, and JavaScript solo project.
+A web application for casual crypto investors who want to quickly see prices and related information.
+
+
