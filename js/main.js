@@ -1,3 +1,18 @@
+function testConnectivity() {
+  var newReq = new XMLHttpRequest();
+  newReq.open('GET', 'https://api.cryptonator.com/api/ticker/btc-usd');
+  newReq.onreadystatechange = function () {
+    if (newReq.readyState === XMLHttpRequest.DONE) {
+      var status = newReq.status;
+      if (status !== 200) {
+        displayNetworkAlert();
+        $accessLoadSignal.className = 'hidden';
+      }
+    }
+  };
+  newReq.send();
+}
+testConnectivity();
 function getBigInfo(object, color) {
   var newReq = new XMLHttpRequest();
   newReq.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
@@ -19,6 +34,7 @@ function getBigInfo(object, color) {
     bigObject.change = bigChange;
     bigObject.target = bigTarget;
     bigObject.color = bigColor;
+    $accessLoadSignal.className = 'hidden';
     displayTable(bigObject, true);
   });
   newReq.send();
@@ -63,11 +79,13 @@ function getData(object) {
 }
 
 function getDataForUser(object) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq4 = new XMLHttpRequest();
   newReq4.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
   newReq4.responseType = 'json';
   newReq4.addEventListener('load', function () {
     if (newReq4.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
@@ -76,23 +94,27 @@ function getDataForUser(object) {
       var userDataObject = getData(newReq4.response.ticker);
       var tableID = object.tableID;
       userDataObject.tableID = tableID;
+      $accessLoadSignal.className = 'hidden';
       displayUserTable(userDataObject, false);
     }
   });
   newReq4.send();
 }
 function reGetDataForUser(object) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq5 = new XMLHttpRequest();
   newReq5.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
   newReq5.responseType = 'json';
   newReq5.addEventListener('load', function () {
     if (newReq5.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
       var reGetID = object.tableID;
       var reGetObject = getData(newReq5.response.ticker);
       reGetObject.tableID = reGetID;
+      $accessLoadSignal.className = 'hidden';
       displayUserTable(reGetObject, false);
       var validtoStore = true;
       return validtoStore;
@@ -102,14 +124,17 @@ function reGetDataForUser(object) {
 }
 
 function getEditDataForUser(object, tableID) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq5 = new XMLHttpRequest();
   newReq5.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
   newReq5.responseType = 'json';
   newReq5.addEventListener('load', function () {
     if (newReq5.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
+      $accessLoadSignal.className = 'hidden';
       var specifiedTable = tableID;
       var $replaceTable = document.querySelector('[data-view="' + specifiedTable + '"]');
       for (var index = 0; index < data.tables.length; index++) {
@@ -147,14 +172,17 @@ function trimData(array) {
 }
 
 function getDataForComparison(object) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq2 = new XMLHttpRequest();
   newReq2.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
   newReq2.responseType = 'json';
   newReq2.addEventListener('load', function () {
     if (newReq2.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
     } else {
+      $accessLoadSignal.className = 'hidden';
       var compareID = data.nextMarketID;
       var userDataObject = {};
       var userDataTicker = newReq2.response.ticker.base;
@@ -173,14 +201,17 @@ function getDataForComparison(object) {
   newReq2.send();
 }
 function reGetComparisonTable(object) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq3 = new XMLHttpRequest();
   newReq3.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
   newReq3.responseType = 'json';
   newReq3.addEventListener('load', function () {
     if (newReq3.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
     } else {
+      $accessLoadSignal.className = 'hidden';
       var compareID = object.marketID;
       var userDataObject = {};
       var userDataTicker = newReq3.response.ticker.base;
@@ -197,14 +228,18 @@ function reGetComparisonTable(object) {
   newReq3.send();
 }
 function retrieveEditComparisonTable(object, compareTableID) {
+  $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
+
   var newReq4 = new XMLHttpRequest();
   newReq4.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
   newReq4.responseType = 'json';
   newReq4.addEventListener('load', function () {
     if (newReq4.response.success === false) {
+      $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
     } else {
+      $accessLoadSignal.className = 'hidden';
       var tableID = compareTableID;
       var $replaceCompareTable = document.querySelector('[data-view="' + tableID + '"]');
       for (var index = 0; index < data.marketTables.length; index++) {
@@ -261,10 +296,44 @@ function createAlert(event) {
 
   return createDiv;
 }
+function createNetworkAlert(event) {
+  var createDiv = document.createElement('div');
+  createDiv.className = 'col-8 col-lg-4 alert alert-danger alert-dismissible fade show';
+  createDiv.setAttribute('role', 'alert');
+
+  var createH4 = document.createElement('h4');
+  createH4.className = 'alert-heading';
+  createH4.textContent = 'Network Connection Issue';
+  createDiv.appendChild(createH4);
+
+  var createSpan = document.createElement('span');
+  createSpan.textContent = 'Please check your internet connection and try again.';
+  createDiv.appendChild(createSpan);
+
+  var createButton = document.createElement('button');
+  createButton.setAttribute('type', 'button');
+  createButton.setAttribute('class', 'close close-alert');
+  createButton.setAttribute('data-dismiss', 'alert');
+  createButton.setAttribute('aria-label', 'Close');
+  createDiv.appendChild(createButton);
+
+  var createSpanTwo = document.createElement('span');
+  createSpanTwo.setAttribute('aria-hidden', 'true');
+  createSpanTwo.innerHTML = '&times;';
+  createButton.appendChild(createSpanTwo);
+
+  return createDiv;
+}
 
 function displayAlert() {
   var $grabAlertPackage = document.querySelector('.alert-package');
   var newAlert = createAlert();
+  $grabAlertPackage.appendChild(newAlert);
+}
+
+function displayNetworkAlert() {
+  var $grabAlertPackage = document.querySelector('.alert-package');
+  var newAlert = createNetworkAlert();
   $grabAlertPackage.appendChild(newAlert);
 }
 
@@ -693,3 +762,5 @@ $comparisonDeleteButton.addEventListener('click', compareForm);
 
 var $deleteComparisonTable = document.querySelector('.delete-comparison-button');
 $deleteComparisonTable.addEventListener('click', deleteComparisonTable);
+
+var $accessLoadSignal = document.querySelector('.table-loader-signal');
