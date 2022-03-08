@@ -15,7 +15,7 @@ A web application for casual crypto investors who want to quickly see prices and
 
 ## Features
 
-- Investors can view the Big-3 Crypto (BTC, ETH, LINK) Table of Information
+- Investors can view the Big-3 Crypto (BTC, ETH, LINK) Table of Information.
 - Investors can search for a cryptocurrency and get its information in a table format.
 - Investors can save a crypto's table of information.
 - Investors can edit or delete a crypto's table of information.
@@ -47,4 +47,4 @@ A web application for casual crypto investors who want to quickly see prices and
     npm install
     ```
     
-3. Start the project. Once started, you can view the application by opening index.html
+3. Start the project. Once started, you can view the application by opening index.html in your default browser.
