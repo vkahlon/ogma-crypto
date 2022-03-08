@@ -24,10 +24,13 @@ function getBigInfo(object, color) {
     var bigBase = object.ticker.charAt(0).toUpperCase() + object.ticker.slice(1);
     var bigPrice = newReq.response.prices[0][1];
     bigPrice = Math.round(bigPrice * 100) / 100;
+    bigPrice = bigPrice.toLocaleString();
     var bigVol = newReq.response.total_volumes[0][1];
     bigVol = Math.round(bigVol * 100) / 100;
+    bigVol = bigVol.toLocaleString();
     var bigChange = newReq.response.market_caps[0][1];
     bigChange = Math.round(bigChange * 100) / 100;
+    bigChange = bigChange.toLocaleString();
     bigObject.base = bigBase;
     bigObject.price = bigPrice;
     bigObject.volume = bigVol;
@@ -68,8 +71,10 @@ function getData(object, responseObject) {
   userPrice = Math.round(userPrice * 100) / 100;
   var userVol = responseObject.total_volumes[0][1];
   userVol = Math.round(userVol * 100) / 100;
+  userVol = userVol.toLocaleString();
   var userChange = responseObject.market_caps[0][1];
   userChange = Math.round(userChange * 100) / 100;
+  userChange = userChange.toLocaleString();
   userObject.base = userBase;
   userObject.price = userPrice;
   userObject.volume = userVol;
@@ -161,10 +166,10 @@ function getEditDataForUser(object, tableID) {
 function createComparisonObject(object, target) {
   var userDataObject = {};
   userDataObject.ticker = object.name;
-  userDataObject.priceChange = object.price_change_24h;
+  userDataObject.priceChange = object.price_change_24h.toLocaleString();
   userDataObject.target = target.toUpperCase();
-  userDataObject.marketChange = object.market_cap_change_24h;
-  userDataObject.allTime = object.ath;
+  userDataObject.marketChange = object.market_cap_change_24h.toLocaleString();
+  userDataObject.allTime = object.ath.toLocaleString();
   return userDataObject;
 }
 
