@@ -158,18 +158,14 @@ function getEditDataForUser(object, tableID) {
   });
   newReq5.send();
 }
-function trimData(array) {
-  var trimmedList = [];
-  for (var i = 0; i < 4; i++) {
-    var mrktObject = {};
-    var market = array[i].market;
-    var price = array[i].price;
-    price = Math.round(price * 100) / 100;
-    mrktObject.market = market;
-    mrktObject.price = price;
-    trimmedList.push(mrktObject);
-  }
-  return trimmedList;
+function createComparisonObject(object, target) {
+  var userDataObject = {};
+  userDataObject.ticker = object.name;
+  userDataObject.priceChange = object.price_change_24h;
+  userDataObject.target = target.toUpperCase();
+  userDataObject.marketChange = object.market_cap_change_24h;
+  userDataObject.allTime = object.ath;
+  return userDataObject;
 }
 
 function getDataForComparison(object) {
@@ -178,20 +174,14 @@ function getDataForComparison(object) {
   newReq2.open('GET', `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${object.target}&ids=${object.ticker}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
   newReq2.responseType = 'json';
   newReq2.addEventListener('load', function () {
-    if ((newReq2.response.error) || (newReq2.response === [])) {
+    if ((newReq2.response.error) || (newReq2.response.length === 0)) {
       $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
     } else {
       $accessLoadSignal.className = 'hidden';
       var compareID = data.nextMarketID;
-      var userDataObject = {};
-      var userDataTicker = newReq2.response[0].name;
-      var userDataList = trimData(newReq2.response.ticker.markets);
-      var userDataTarget = newReq2.response.ticker.target;
-      userDataObject.ticker = userDataTicker;
-      userDataObject.list = userDataList;
-      userDataObject.target = userDataTarget;
+      var userDataObject = createComparisonObject(newReq2.response[0], object.target);
       userDataObject.color = '#017bff';
       userDataObject.marketID = compareID;
       displayVendorTable(userDataObject);
@@ -204,23 +194,17 @@ function getDataForComparison(object) {
 function reGetComparisonTable(object) {
   $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq3 = new XMLHttpRequest();
-  newReq3.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
+  newReq3.open('GET', `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${object.target}&ids=${object.ticker.toLowerCase()}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
   newReq3.responseType = 'json';
   newReq3.addEventListener('load', function () {
-    if (newReq3.response.success === false) {
+    if ((newReq3.response.error) || (newReq3.response.length === 0)) {
       $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
     } else {
       $accessLoadSignal.className = 'hidden';
       var compareID = object.marketID;
-      var userDataObject = {};
-      var userDataTicker = newReq3.response.ticker.base;
-      var userDataList = trimData(newReq3.response.ticker.markets);
-      var userDataTarget = newReq3.response.ticker.target;
-      userDataObject.ticker = userDataTicker;
-      userDataObject.list = userDataList;
-      userDataObject.target = userDataTarget;
+      var userDataObject = createComparisonObject(newReq3.response[0], object.target);
       userDataObject.color = '#017bff';
       userDataObject.marketID = compareID;
       displayVendorTable(userDataObject);
@@ -230,12 +214,11 @@ function reGetComparisonTable(object) {
 }
 function retrieveEditComparisonTable(object, compareTableID) {
   $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
-
   var newReq4 = new XMLHttpRequest();
-  newReq4.open('GET', `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${object.target}&ids=${object.ticker}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
+  newReq4.open('GET', `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${object.target}&ids=${object.ticker.toLowerCase()}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
   newReq4.responseType = 'json';
   newReq4.addEventListener('load', function () {
-    if (newReq4.response.success === false) {
+    if ((newReq4.response.error) || (newReq4.response.length === 0)) {
       $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
@@ -249,13 +232,7 @@ function retrieveEditComparisonTable(object, compareTableID) {
           data.marketTables[index] = object;
         }
       }
-      var userDataObject = {};
-      var userDataTicker = newReq4.response.ticker.base;
-      var userDataList = trimData(newReq4.response.ticker.markets);
-      var userDataTarget = newReq4.response.ticker.target;
-      userDataObject.ticker = userDataTicker;
-      userDataObject.list = userDataList;
-      userDataObject.target = userDataTarget;
+      var userDataObject = createComparisonObject(newReq4.response[0], object.target);
       userDataObject.color = '#017bff';
       userDataObject.marketID = tableID;
       var tempCompareTable = compareTableTree(userDataObject);
@@ -370,7 +347,7 @@ function compareTableTree(object) {
 
   var createSpanAlpha = document.createElement('span');
   createSpanAlpha.className = 'table-header d-flex justify-content-between table-header';
-  createSpanAlpha.textContent = object.ticker + ' Markets';
+  createSpanAlpha.textContent = object.ticker + ' in 24Hr';
   createTh.appendChild(createSpanAlpha);
 
   var createIconButton = document.createElement('button');
@@ -385,12 +362,12 @@ function compareTableTree(object) {
 
   var createTableCellOne = document.createElement('td');
   createTableCellOne.setAttribute('class', 'description');
-  createTableCellOne.textContent = object.list[0].market;
+  createTableCellOne.textContent = 'Price Change';
   createTableRowTwo.appendChild(createTableCellOne);
 
   var createTableCellTwo = document.createElement('td');
   createTableCellTwo.setAttribute('class', 'col-5');
-  createTableCellTwo.textContent = object.list[0].price + ' ' + object.target;
+  createTableCellTwo.textContent = object.priceChange;
   createTableRowTwo.appendChild(createTableCellTwo);
 
   var createTableRowThree = document.createElement('tr');
@@ -398,11 +375,11 @@ function compareTableTree(object) {
 
   var createTableCellThree = document.createElement('td');
   createTableCellThree.setAttribute('class', 'description');
-  createTableCellThree.textContent = object.list[1].market;
+  createTableCellThree.textContent = 'Target';
   createTableRowThree.appendChild(createTableCellThree);
 
   var createTableCellFour = document.createElement('td');
-  createTableCellFour.textContent = object.list[1].price + ' ' + object.target;
+  createTableCellFour.textContent = object.target;
   createTableRowThree.appendChild(createTableCellFour);
 
   var createTableRowFour = document.createElement('tr');
@@ -410,11 +387,11 @@ function compareTableTree(object) {
 
   var createTableCellFive = document.createElement('td');
   createTableCellFive.setAttribute('class', 'description');
-  createTableCellFive.textContent = object.list[2].market;
+  createTableCellFive.textContent = 'Market-Cap Change';
   createTableRowFour.appendChild(createTableCellFive);
 
   var createTableCellSix = document.createElement('td');
-  createTableCellSix.textContent = object.list[2].price + ' ' + object.target;
+  createTableCellSix.textContent = object.marketChange;
   createTableRowFour.appendChild(createTableCellSix);
 
   var createTableRowFive = document.createElement('tr');
@@ -422,11 +399,11 @@ function compareTableTree(object) {
 
   var createTableCellSeven = document.createElement('td');
   createTableCellSeven.setAttribute('class', 'description');
-  createTableCellSeven.textContent = object.list[3].market;
+  createTableCellSeven.textContent = 'ATH';
   createTableRowFive.appendChild(createTableCellSeven);
 
   var createTableCellEight = document.createElement('td');
-  createTableCellEight.textContent = object.list[3].price + ' ' + object.target;
+  createTableCellEight.textContent = object.allTime;
   createTableRowFive.appendChild(createTableCellEight);
   return createDivCompare;
 }
