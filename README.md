@@ -8,6 +8,7 @@ A web application for casual crypto investors who want to quickly see prices and
 - HTML5
 - CSS3
 - JavaScript
+- [CoinGecko's /coins/markets API](https://www.coingecko.com/en/api/documentation)
 
 ## Live Demo
 
@@ -38,7 +39,7 @@ A web application for casual crypto investors who want to quickly see prices and
 
     ```shell
     git clone https://github.com/vkahlon/Ogma-Crypto.git
-    cd sgt-react
+    cd ogma-crypto
     ```
 
 2. Install all dependencies with NPM.
