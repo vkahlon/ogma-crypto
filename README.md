@@ -19,11 +19,11 @@ A web application for casual crypto investors who want to quickly see prices and
 - Investors can search for a cryptocurrency and get its information in a table format.
 - Investors can save a crypto's table of information.
 - Investors can edit or delete a crypto's table of information.
-- Investors can view the 24 hour differences (price, volumne, market) of a cryptocurrency.
+- Investors can view the 24-hour differences (price, volume, market) of a cryptocurrency.
 
 ## Stretch Features
 
-- Investors can input two Crytocurrencies and recieve a table of comparison info.
+- Investors can input two cryptocurrencies and receive a table of comparison info.
 
 
 ## Preview
