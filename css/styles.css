@@ -38,8 +38,9 @@
   font-size: 14px;
 }
 
-.table-creator {
-  color: #017bff;
+.table-creator,
+.comparison-creator {
+  cursor: pointer;
 }
 
 .form-wrapper,
