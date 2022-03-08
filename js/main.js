@@ -1,6 +1,6 @@
 function testConnectivity() {
   var newReq = new XMLHttpRequest();
-  newReq.open('GET', 'https://api.cryptonator.com/api/ticker/btc-usd');
+  newReq.open('GET', 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1&interval=daily');
   newReq.onreadystatechange = function () {
     if (newReq.readyState === XMLHttpRequest.DONE) {
       var status = newReq.status;
@@ -15,18 +15,18 @@ function testConnectivity() {
 testConnectivity();
 function getBigInfo(object, color) {
   var newReq = new XMLHttpRequest();
-  newReq.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq.open('GET', `https://api.coingecko.com/api/v3/coins/${object.ticker}/market_chart?vs_currency=${object.target}&days=1&interval=daily`);
   newReq.responseType = 'json';
   newReq.addEventListener('load', function () {
     var bigColor = color;
     var bigObject = {};
-    var bigTarget = newReq.response.ticker.target;
-    var bigBase = newReq.response.ticker.base;
-    var bigPrice = newReq.response.ticker.price;
+    var bigTarget = object.target.toUpperCase();
+    var bigBase = object.ticker.charAt(0).toUpperCase() + object.ticker.slice(1);
+    var bigPrice = newReq.response.prices[0][1];
     bigPrice = Math.round(bigPrice * 100) / 100;
-    var bigVol = newReq.response.ticker.volume;
+    var bigVol = newReq.response.total_volumes[0][1];
     bigVol = Math.round(bigVol * 100) / 100;
-    var bigChange = newReq.response.ticker.change;
+    var bigChange = newReq.response.market_caps[0][1];
     bigChange = Math.round(bigChange * 100) / 100;
     bigObject.base = bigBase;
     bigObject.price = bigPrice;
@@ -39,35 +39,36 @@ function getBigInfo(object, color) {
   });
   newReq.send();
 }
+
 function bigInfo() {
   var btcInput = {
-    ticker: 'btc',
+    ticker: 'bitcoin',
     target: 'usd'
   };
   getBigInfo(btcInput, '#F8A33C');
   var ethInput = {
-    ticker: 'eth',
+    ticker: 'ethereum',
     target: 'usd'
   };
   getBigInfo(ethInput, '#768FED');
   var linkInput = {
-    ticker: 'link',
+    ticker: 'chainlink',
     target: 'usd'
   };
   getBigInfo(linkInput, 'rgb(38,83,216)');
 }
 bigInfo();
 
-function getData(object) {
+function getData(object, responseObject) {
   var userColor = '#2E64B0';
   var userObject = {};
-  var userTarget = object.target;
-  var userBase = object.base;
-  var userPrice = object.price;
+  var userTarget = object.target.toUpperCase();
+  var userBase = object.ticker.charAt(0).toUpperCase() + object.ticker.slice(1);
+  var userPrice = responseObject.prices[0][1];
   userPrice = Math.round(userPrice * 100) / 100;
-  var userVol = object.volume;
+  var userVol = responseObject.total_volumes[0][1];
   userVol = Math.round(userVol * 100) / 100;
-  var userChange = object.change;
+  var userChange = responseObject.market_caps[0][1];
   userChange = Math.round(userChange * 100) / 100;
   userObject.base = userBase;
   userObject.price = userPrice;
@@ -81,17 +82,17 @@ function getData(object) {
 function getDataForUser(object) {
   $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq4 = new XMLHttpRequest();
-  newReq4.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq4.open('GET', `https://api.coingecko.com/api/v3/coins/${object.ticker}/market_chart?vs_currency=${object.target}&days=1&interval=daily`);
   newReq4.responseType = 'json';
   newReq4.addEventListener('load', function () {
-    if (newReq4.response.success === false) {
+    if (newReq4.response.error) {
       $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
       data.tables.unshift(object);
       data.nextTableId++;
-      var userDataObject = getData(newReq4.response.ticker);
+      var userDataObject = getData(object, newReq4.response);
       var tableID = object.tableID;
       userDataObject.tableID = tableID;
       $accessLoadSignal.className = 'hidden';
@@ -103,16 +104,16 @@ function getDataForUser(object) {
 function reGetDataForUser(object) {
   $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq5 = new XMLHttpRequest();
-  newReq5.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq5.open('GET', `https://api.coingecko.com/api/v3/coins/${object.ticker}/market_chart?vs_currency=${object.target}&days=1&interval=daily`);
   newReq5.responseType = 'json';
   newReq5.addEventListener('load', function () {
-    if (newReq5.response.success === false) {
+    if (newReq5.response.error) {
       $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
     } else {
       var reGetID = object.tableID;
-      var reGetObject = getData(newReq5.response.ticker);
+      var reGetObject = getData(object, newReq5.response);
       reGetObject.tableID = reGetID;
       $accessLoadSignal.className = 'hidden';
       displayUserTable(reGetObject, false);
@@ -126,10 +127,10 @@ function reGetDataForUser(object) {
 function getEditDataForUser(object, tableID) {
   $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq5 = new XMLHttpRequest();
-  newReq5.open('GET', 'https://api.cryptonator.com/api/ticker/' + object.ticker + '-' + object.target);
+  newReq5.open('GET', `https://api.coingecko.com/api/v3/coins/${object.ticker}/market_chart?vs_currency=${object.target}&days=1&interval=daily`);
   newReq5.responseType = 'json';
   newReq5.addEventListener('load', function () {
-    if (newReq5.response.success === false) {
+    if (newReq5.response.error) {
       $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromSubmission.reset();
@@ -144,7 +145,7 @@ function getEditDataForUser(object, tableID) {
         }
       }
       var editTableID = object.tableID;
-      var editUserObject = getData(newReq5.response.ticker);
+      var editUserObject = getData(object, newReq5.response);
       editUserObject.tableID = editTableID;
       var tempReplace = createTableTree(editUserObject, false);
       for (var i = 0; i < data.tables.length; i++) {
@@ -174,10 +175,10 @@ function trimData(array) {
 function getDataForComparison(object) {
   $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
   var newReq2 = new XMLHttpRequest();
-  newReq2.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
+  newReq2.open('GET', `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${object.target}&ids=${object.ticker}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
   newReq2.responseType = 'json';
   newReq2.addEventListener('load', function () {
-    if (newReq2.response.success === false) {
+    if ((newReq2.response.error) || (newReq2.response === [])) {
       $accessLoadSignal.className = 'hidden';
       displayAlert();
       $getInfoFromComparison.reset();
@@ -185,7 +186,7 @@ function getDataForComparison(object) {
       $accessLoadSignal.className = 'hidden';
       var compareID = data.nextMarketID;
       var userDataObject = {};
-      var userDataTicker = newReq2.response.ticker.base;
+      var userDataTicker = newReq2.response[0].name;
       var userDataList = trimData(newReq2.response.ticker.markets);
       var userDataTarget = newReq2.response.ticker.target;
       userDataObject.ticker = userDataTicker;
@@ -231,7 +232,7 @@ function retrieveEditComparisonTable(object, compareTableID) {
   $accessLoadSignal.className = 'table-loader-signal d-flex justify-content-center';
 
   var newReq4 = new XMLHttpRequest();
-  newReq4.open('GET', 'https://api.cryptonator.com/api/full/' + object.ticker + '-' + object.target);
+  newReq4.open('GET', `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${object.target}&ids=${object.ticker}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
   newReq4.responseType = 'json';
   newReq4.addEventListener('load', function () {
     if (newReq4.response.success === false) {
@@ -522,7 +523,7 @@ function createTableTree(object, isBigThree) {
 
   var createTableCellSeven = document.createElement('td');
   createTableCellSeven.setAttribute('class', 'description');
-  createTableCellSeven.textContent = 'Change';
+  createTableCellSeven.textContent = 'Market Cap';
   createTableRowFive.appendChild(createTableCellSeven);
 
   var createTableCellEight = document.createElement('td');
