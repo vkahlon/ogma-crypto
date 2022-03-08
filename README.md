@@ -8,7 +8,7 @@ A web application for casual crypto investors who want to quickly see prices and
 - HTML5
 - CSS3
 - JavaScript
-- [CoinGecko's /coins/markets API](https://www.coingecko.com/en/api/documentation)
+- [CoinGecko's /coins/markets API](https://www.coingecko.com/en/api/documentation) using a XMLHttpRequest
 
 ## Live Demo
 
