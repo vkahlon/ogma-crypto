@@ -12,7 +12,7 @@ A web application for casual crypto investors who want to quickly see prices and
 
 ## Live Demo
 
-[Try Ogma-Crypto Live](https://vkahlon.github.io/Ogma-Crypto/)
+[Try Ogma-Crypto Live](https://vkahlon.github.io/ogma-crypto/)
 
 ## Features
 
